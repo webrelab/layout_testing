@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="58fe49bb-7401-4c8f-b898-7c210f99274a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/ElementsTreeGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/Executor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/LayoutComparator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/LayoutConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/LayoutElement.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/LayoutTestingException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/Main.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/PageScanner.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/Tree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/enums/MeasuringType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/enums/ScreenSize.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/ifaces/IMeasuringType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/ifaces/IMethodsInjection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/ifaces/IRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/ifaces/IScreenSize.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/AttributeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/DecorRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/DimensionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/PositionRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/RawDataSet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/Repository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/SizeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/repository/TextRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/screen_difference/DifferenceReport.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/screen_difference/DifferentElements.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/screen_difference/PairCollection.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/screen_difference/PairElements.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/screen_difference/PairSifter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/snippets/Snippet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/snippets/SnippetsRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/utils/DataTransformer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/utils/EnumDetermination.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/utils/ReadWriteUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/utils/ScreenDraw.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/utils/ScreenSizeUtils.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/create_container.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/create_tree.js_snippet" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/greed_draw.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/measure_before_after.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/measure_decore.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/js_snippets/measure_text.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ru/webrelab/layout_testing/Environment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ru/webrelab/layout_testing/LayoutTestingConfigurator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/ru/webrelab/layout_testing/MethodsInjectionImpl.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="layout_testing" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="layout_testing" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="layout_testing" type="f1a62948:ProjectNode" />
+                <item name="Dependencies" type="6de06a37:ExternalSystemViewDefaultContributor$MyDependenciesNode" />
+                <item name="compileClasspath" type="62daadca:ExternalSystemViewDefaultContributor$DependencyScopeExternalSystemNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Enum" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectId" id="2H72h8hNB45xEB8uChdMnW8Uvif" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/home/user/IdeaProjects/layout_testing/src/main/resources/js_snippets",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.editor"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/resources/js_snippets" />
+      <recent name="$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/enums" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ru.webrelab.layout_testing.Main" />
+      <module name="layout_testing.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ru.webrelab.layout_testing.utils.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="58fe49bb-7401-4c8f-b898-7c210f99274a" name="Changes" comment="" />
+      <created>1667621917415</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1667621917415</updated>
+      <workItem from="1667621918709" duration="98557000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/ru/webrelab/layout_testing/Main.java</url>
+          <line>4</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
