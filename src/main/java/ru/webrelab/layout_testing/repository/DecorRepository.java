@@ -2,9 +2,10 @@ package ru.webrelab.layout_testing.repository;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.utils.ElementStylesUtil;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Getter
@@ -14,13 +15,16 @@ public class DecorRepository extends AttributeRepository {
     private final String boxShadow;
     private final String background;
 
-    @SuppressWarnings("unchecked")
-    public DecorRepository(Object object) {
-        final Map<String, Object> styles =
-                (Map<String, Object>) LayoutConfiguration.INSTANCE.getMethods().executeJs("return window.getComputedStyle(arguments[0])", object);
-        border = (String) styles.get("border");
-        borderRadius = (String) styles.get("borderRadius");
-        boxShadow = (String) styles.get("boxShadow");
-        background = (String) styles.get("background");
+    public DecorRepository(Object webElement) {
+        final Map<String, Object> styles = ElementStylesUtil.getStyles(webElement);
+        border = Objects.requireNonNull((String) styles.get("border"));
+        borderRadius = Objects.requireNonNull((String) styles.get("borderRadius"));
+        boxShadow = Objects.requireNonNull((String) styles.get("boxShadow"));
+        background = Objects.requireNonNull((String) styles.get("background"));
+    }
+
+    @Override
+    public boolean check() {
+        return true;
     }
 }

@@ -14,7 +14,7 @@ public enum MeasuringType implements IMeasuringType {
     COMPLEX("", false, null),
     ALL(COMPLEX.xpath, COMPLEX.complex, COMPLEX.repositoryClass),
     TEXT("descendant-or-self::*[contains(@class, 'measuringTypeText')]", true, TextRepository.class),
-    DECOR("descendant-or-self::*[contains(@class, 'layout_testing_decoration')]", true, DecorRepository.class),
+    DECOR("descendant-or-self::*[contains(@class, 'measuringTypeDecor')]", true, DecorRepository.class),
     ;
 
     private final String xpath;

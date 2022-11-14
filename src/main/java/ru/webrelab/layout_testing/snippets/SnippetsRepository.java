@@ -1,5 +1,7 @@
 package ru.webrelab.layout_testing.snippets;
 
+import ru.webrelab.layout_testing.LayoutTestingException;
+
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +19,14 @@ public class SnippetsRepository {
     private SnippetsRepository() {
         Stream.of(Snippet.values()).map(Snippet::getSnippet).forEach(name -> {
             try(InputStream is = getClass().getClassLoader().getResourceAsStream("js_snippets/" + name)) {
+                if (is == null) {
+                    throw new LayoutTestingException(String.format("Error when reading file 'js_snippets/%s'. Check file name.", name));
+                }
                 InputStreamReader reader = new InputStreamReader(Objects.requireNonNull(is));
                 BufferedReader br = new BufferedReader(reader);
                 resources.put(name, br.lines().collect(Collectors.joining("\n")));
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new LayoutTestingException("Error when reading file js_snippets/" + name);
             }
         });
     }

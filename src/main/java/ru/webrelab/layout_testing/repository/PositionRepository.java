@@ -6,7 +6,7 @@ import lombok.Getter;
 public class PositionRepository extends DimensionRepository {
     private final int top;
     private final int left;
-    private final boolean isAbsolute;
+    private transient final boolean isAbsolute;
 
     /**
      * Конструктор для задания абсолютной позиции элемента

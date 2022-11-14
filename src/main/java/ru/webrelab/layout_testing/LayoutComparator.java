@@ -4,25 +4,44 @@ import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.screen_difference.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class LayoutComparator {
-    private final Tree<LayoutElement> actualTree;
-    private final Tree<LayoutElement> expectedTree;
+    private final LayoutCollection actualElements;
+    private final LayoutCollection expectedElements;
 
-    public List<DifferenceReport> compare() {
+    public List<DifferenceReport> compareRoot() {
         final PairCollection pairCollection = new PairCollection();
-        for (final Tree<LayoutElement> actual : actualTree.getChildren()) {
-            for (final Tree<LayoutElement> expected : expectedTree.getChildren()) {
+        for (final LayoutElement actual : getRootElements(actualElements)) {
+            for (final LayoutElement expected : getRootElements(expectedElements)) {
                 pairCollection.add(new PairElements(actual, expected));
             }
         }
+        return comparePairs(pairCollection);
+    }
+
+    public List<DifferenceReport> comparePairs(final PairCollection pairCollection) {
         final PairSifter sifter = new PairSifter(pairCollection);
         final List<DifferenceReport> reports = sifter.sift();
-        sifter.getEquivalentPairs().forEach(p -> {
-            final LayoutComparator comparator = new LayoutComparator(p.getActual(), p.getExpected());
-            reports.addAll(comparator.compare());
-        });
+        for (final PairElements pair : sifter.getEquivalentPairs()) {
+            final PairCollection internalPairCollection = new PairCollection();
+            for (final String actual : pair.getActual().getChildren()) {
+                for (final String expected : pair.getExpected().getChildren()) {
+                    internalPairCollection.add(new PairElements(actualElements.get(actual), expectedElements.get(expected)));
+                }
+            }
+            if (!internalPairCollection.isEmpty()) {
+                reports.addAll(new LayoutComparator(actualElements, expectedElements).comparePairs(internalPairCollection));
+            }
+        }
         return reports;
+    }
+
+    private List<LayoutElement> getRootElements(final LayoutCollection elements) {
+        return elements.values().stream()
+                .filter(e -> e.getParent().isEmpty())
+                .collect(Collectors.toList());
+
     }
 }

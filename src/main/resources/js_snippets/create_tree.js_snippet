@@ -3,6 +3,7 @@ let elementTree = function (map) {
     for (parentId in map) {
         for (childId in map) {
             if (parentId === childId) continue
+            if (map[parentId] === map[childId]) continue;
             if (map[parentId].contains(map[childId])) {
                 a.push({'parent': parentId, 'child': childId})
             }

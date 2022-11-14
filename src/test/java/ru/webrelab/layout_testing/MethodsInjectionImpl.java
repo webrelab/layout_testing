@@ -8,6 +8,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
+import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
 
 import java.util.List;
 
@@ -60,5 +61,15 @@ public class MethodsInjectionImpl implements IMethodsInjection {
     @Override
     public void setWindowSize(SizeRepository size) {
         Environment.INSTANCE.driver.manage().window().setSize(new Dimension(size.getWidth(), size.getHeight()));
+    }
+
+    @Override
+    public void actionAfterTestFailed(List<DifferenceReport> reports) {
+        try {
+            Thread.sleep(15000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        reports.forEach(System.out::println);
     }
 }

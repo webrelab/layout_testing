@@ -13,16 +13,16 @@ import java.util.*;
 
 @Getter
 public class LayoutElement {
-    private final String uuid;
+    private final String id;
     private final String name;
-    private final boolean ignore = false;
+    private boolean ignore = false;
     private final String tagName;
     private final IMeasuringType type;
     private final PositionRepository position;
     private final SizeRepository size;
     private final IRepository data;
     private transient final Object element;
-    private String parent;
+    private String parent = "";
     private Set<String> children = new HashSet<>();
 
     public LayoutElement(
@@ -34,7 +34,7 @@ public class LayoutElement {
             IRepository data,
             Object element
     ) {
-        uuid = UUID.randomUUID().toString();
+        id = IdGen.getNew();
         this.name = name;
         this.tagName = tagName;
         this.type = type;
@@ -47,8 +47,9 @@ public class LayoutElement {
     @SuppressWarnings("unchecked")
     public LayoutElement(final JsonObject jsonObject) {
         final Gson gson = new Gson();
-        uuid = jsonObject.getAsJsonPrimitive("uuid").getAsString();
+        id = jsonObject.getAsJsonPrimitive("id").getAsString();
         name = jsonObject.getAsJsonPrimitive("name").getAsString();
+        ignore = jsonObject.getAsJsonPrimitive("ignore").getAsBoolean();
         tagName = jsonObject.getAsJsonPrimitive("tagName").getAsString();
         final String typeName = jsonObject.getAsJsonPrimitive("type").getAsString();
         type = EnumDetermination.determineMeasureEnum(typeName);
@@ -80,4 +81,10 @@ public class LayoutElement {
         children.add(child);
     }
 
+    static class IdGen {
+        private static int counter = 0;
+        static String getNew() {
+            return String.valueOf(++counter);
+        }
+    }
 }

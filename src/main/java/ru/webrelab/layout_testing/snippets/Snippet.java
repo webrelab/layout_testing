@@ -7,6 +7,7 @@ public enum Snippet {
     MEASURE_TEXT("measure_text.js"),
     MEASURE_BEFORE_AFTER("measure_before_after.js"),
     MEASURE_DECOR("measure_decor.js"),
+    GET_STYLES("get_styles.js_snippet"),
     ;
     private final String snippet;
 

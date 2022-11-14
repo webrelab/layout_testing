@@ -5,6 +5,7 @@ function f(arg) {
     }
     [...arg.children]
         .forEach(e => {
+            if (e.tagName === 'STYLE' || e.tagName === 'SCRIPT') return
             let r = e.innerText;
             if (r === undefined || r.length === 0) {
                 return;

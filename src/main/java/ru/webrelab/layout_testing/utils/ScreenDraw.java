@@ -29,7 +29,7 @@ public class ScreenDraw {
         if (report.getExpected() != null) draw(Color.EXPECTED, report.getExpected());
     }
 
-    private void draw(final Color color, final LayoutElement layoutElement) {
+    public void draw(final Color color, final LayoutElement layoutElement) {
         final Map<String, Object> block = new HashMap<>();
         block.put("top", layoutElement.getPosition().getTop() + container.getTop());
         block.put("left", layoutElement.getPosition().getLeft() + container.getLeft());
@@ -55,9 +55,9 @@ public class ScreenDraw {
 
     @RequiredArgsConstructor
     @Getter
-    private enum Color {
-        ACTUAL(".actual_grid"),
-        EXPECTED(".expected_grid")
+    public enum Color {
+        ACTUAL("actual_grid"),
+        EXPECTED("expected_grid")
         ;
         private final String colorClass;
     }

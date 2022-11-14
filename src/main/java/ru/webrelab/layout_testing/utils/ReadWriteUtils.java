@@ -14,8 +14,8 @@ public class ReadWriteUtils {
     @SneakyThrows
     public static void write(final String json, final String name, final String browserName, final IScreenSize size, final String... path) {
         final Path fullPath = getPath(name, browserName, size, path);
-        if (!Files.exists(fullPath)) {
-            Files.createDirectories(fullPath);
+        if (!Files.exists(fullPath.getParent())) {
+            Files.createDirectories(fullPath.getParent());
         }
         Files.write(fullPath, json.getBytes(StandardCharsets.UTF_8));
     }
@@ -33,7 +33,7 @@ public class ReadWriteUtils {
 
     @SneakyThrows
     public static Path getPath(final String name, final String browserName, final IScreenSize size, final String... path) {
-        Path fullPath = Paths.get("resource", "data", "layouts", browserName, ((Enum<?>) size).name());
+        Path fullPath = Paths.get("src", "test", "resources", "data", "layouts", browserName, ((Enum<?>) size).name());
         for (final String p : path) {
             fullPath = fullPath.resolve(p);
         }

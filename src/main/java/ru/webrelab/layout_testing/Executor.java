@@ -1,5 +1,6 @@
 package ru.webrelab.layout_testing;
 
+import lombok.SneakyThrows;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IScreenSize;
@@ -14,7 +15,6 @@ import ru.webrelab.layout_testing.utils.ScreenDraw;
 import ru.webrelab.layout_testing.utils.ScreenSizeUtils;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Executor {
@@ -45,11 +45,14 @@ public class Executor {
                 methods.getPosition(initialPosition, containerElement);
     }
 
+    @SneakyThrows
     public void execute() {
         prepare();
-        final List<LayoutElement> actualLayoutElements = scanScreen();
+        final LayoutCollection actualLayoutElements = scanScreen();
 
         if (!ReadWriteUtils.isFileExist(measureScenarioName, browserName, currentScreenSize, storagePath)) {
+            final ScreenDraw screenDraw = new ScreenDraw(container);
+            actualLayoutElements.forEach((k, v) -> screenDraw.draw(ScreenDraw.Color.EXPECTED, v));
             ReadWriteUtils.write(
                     DataTransformer.serialize(actualLayoutElements),
                     measureScenarioName,
@@ -59,7 +62,7 @@ public class Executor {
             );
             return;
         }
-        final List<LayoutElement> expectedLayoutElements = DataTransformer.deserialize(
+        final LayoutCollection expectedLayoutElements = DataTransformer.deserialize(
                 ReadWriteUtils.read(
                         measureScenarioName,
                         browserName,
@@ -68,13 +71,14 @@ public class Executor {
                 )
         );
         final LayoutComparator comparator = new LayoutComparator(
-                createTree(actualLayoutElements),
-                createTree(expectedLayoutElements)
+                actualLayoutElements,
+                expectedLayoutElements
         );
 
-        final List<DifferenceReport> reports = comparator.compare();
+        final List<DifferenceReport> reports = comparator.compareRoot();
         if (!reports.isEmpty()) {
             new ScreenDraw(container).draw(reports);
+            LayoutConfiguration.INSTANCE.getMethodsInjection().actionAfterTestFailed(reports);
         }
     }
 
@@ -84,60 +88,18 @@ public class Executor {
         methods.executeJs(SnippetsRepository.INSTANCE.getSnippet(Snippet.MEASURE_DECOR.getSnippet()));
     }
 
-    private List<LayoutElement> scanScreen() {
-        final List<LayoutElement> actualLayoutElements = new ArrayList<>();
+    private LayoutCollection scanScreen() {
+        final LayoutCollection actualLayoutElements = new LayoutCollection();
         dataSetList.forEach(ds -> {
             for (final IMeasuringType type : ds.getMeasureTypes()) {
                 final PageScanner scanner = new PageScanner(ds.getElementName(), container, ds.getElement(), type);
-                actualLayoutElements.addAll(scanner.scan());
+                final LayoutCollection elementsByType = scanner.scan();
+                final ElementsTreeGenerator elementsTreeGenerator = new ElementsTreeGenerator(elementsByType);
+                elementsTreeGenerator.createTree();
+                elementsTreeGenerator.updateLayoutElements(elementsByType);
+                actualLayoutElements.putAll(elementsByType);
             }
         });
-        final Map<String, LayoutElement> uuidMap = actualLayoutElements
-                .stream()
-                .collect(Collectors.toMap(LayoutElement::getUuid, e -> e, (a, b) -> a));
-        final ElementsTreeGenerator elementsTreeGenerator = new ElementsTreeGenerator();
-        actualLayoutElements.forEach(e -> elementsTreeGenerator.put(e.getUuid(), e.getElement()));
-        final Tree<String> tree = elementsTreeGenerator.createTree();
-        final Stack<Tree<String>> stack = new Stack<>();
-        stack.push(tree);
-        while (!stack.isEmpty()) {
-            final Tree<String> temp = stack.pop();
-            if (temp.hasParent()) {
-                uuidMap.get(temp.getValue()).setParent(temp.getParent().getValue());
-            }
-            if (temp.hasChildren()) {
-                temp.getChildren().stream()
-                        .map(Tree::getValue)
-                        .forEach(uuidMap.get(temp.getValue())::addChild);
-                temp.getChildren().forEach(stack::push);
-            }
-        }
-        if (actualLayoutElements.isEmpty()) {
-            throw new LayoutTestingException("No one element found");
-        }
         return actualLayoutElements;
     }
-
-    private Tree<LayoutElement> createTree(final List<LayoutElement> elements) {
-        final Map<String, LayoutElement> uuidMap = new HashMap<>();
-        elements.forEach(e -> uuidMap.put(e.getUuid(), e));
-        final Tree<LayoutElement> treeRoot = new Tree<>(null);
-        elements.stream()
-                .filter(e -> e.getParent() == null)
-                .forEach(e -> new Tree<>(e, treeRoot));
-        final Queue<Tree<LayoutElement>> queue = new LinkedList<>();
-        queue.offer(treeRoot);
-        while (!queue.isEmpty()) {
-            final Tree<LayoutElement> temp = queue.poll();
-            if (!temp.getValue().getChildren().isEmpty()) {
-                temp.getValue().getChildren().forEach(ch -> {
-                    final Tree<LayoutElement> childTree = new Tree<>(uuidMap.get(ch), temp);
-                    queue.offer(childTree);
-                });
-            }
-        }
-        return treeRoot;
-    }
-
-
 }

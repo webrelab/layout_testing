@@ -3,8 +3,10 @@ package ru.webrelab.layout_testing.repository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.utils.ElementStylesUtil;
 
 import java.util.Map;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,19 +21,21 @@ public class TextRepository extends AttributeRepository {
     private final String textShadow;
     private final String content;
 
-    @SuppressWarnings("unchecked")
-    public TextRepository(final Object object) {
-        final Map<String, Object> styles =
-                (Map<String, Object>) LayoutConfiguration.INSTANCE.getMethods().executeJs("return window.getComputedStyle(arguments[0])", object);
-        fontFamily = (String) styles.get("fontFamily");
-        fontSize = (String) styles.get("fontSize");
-        fontWeight = (String) styles.get("fontWeight");
-        color = (String) styles.get("color");
-        fontStyle = (String) styles.get("fontStyle");
-        fontVariant = (String) styles.get("fontVariant");
-        textDecoration = (String) styles.get("textDecoration");
-        textShadow = (String) styles.get("textShadow");
-        content = LayoutConfiguration.INSTANCE.getMethods().getText(object);
+    public TextRepository(final Object webElement) {
+        final Map<String, Object> styles = ElementStylesUtil.getStyles(webElement);
+        fontFamily = Objects.requireNonNull((String) styles.get("fontFamily"));
+        fontSize = Objects.requireNonNull((String) styles.get("fontSize"));
+        fontWeight = Objects.requireNonNull((String) styles.get("fontWeight"));
+        color = Objects.requireNonNull((String) styles.get("color"));
+        fontStyle = Objects.requireNonNull((String) styles.get("fontStyle"));
+        fontVariant = Objects.requireNonNull((String) styles.get("fontVariant"));
+        textDecoration = Objects.requireNonNull((String) styles.get("textDecoration"));
+        textShadow = Objects.requireNonNull((String) styles.get("textShadow"));
+        content = LayoutConfiguration.INSTANCE.getMethods().getText(webElement);
+    }
 
+    @Override
+    public boolean check() {
+        return content != null && !content.isEmpty();
     }
 }

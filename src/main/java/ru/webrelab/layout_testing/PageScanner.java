@@ -7,11 +7,8 @@ import ru.webrelab.layout_testing.ifaces.IRepository;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PageScanner {
     private final String name;
@@ -20,58 +17,50 @@ public class PageScanner {
     private final IMeasuringType type;
     private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethods();
 
-    public PageScanner(String name, Object container, Object element, IMeasuringType type) {
+    public PageScanner(String name, PositionRepository container, Object element, IMeasuringType type) {
         this.name = name;
-        this.container = LayoutConfiguration.INSTANCE.getMethods().getPosition(new PositionRepository(0, 0), container);
+        this.container = container;
         this.element = element;
         this.type = type;
     }
 
-    public List<LayoutElement> scan() {
+    public LayoutCollection scan() {
         final String typeName = ((Enum<?>) type).name();
 
-        switch (typeName) {
-            case "COMPLEX":
-            case "ALL":
-                return Stream.of(LayoutConfiguration.INSTANCE.getDefaultMeasuringTypeEnum().getEnumConstants())
-                        .filter(IMeasuringType::isComplex)
-                        .map(this::scan)
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList());
-            case "POSITION":
-                final List<LayoutElement> elements = new ArrayList<>();
-                final SizeRepository size = methods.getSize(element);
-                if (size.isEmpty()) return elements;
-                final PositionRepository position = methods.getPosition(container, element);
-                final String tagName = methods.getTagName(element);
-                final LayoutElement layoutElement =
-                        new LayoutElement(
-                                name,
-                                tagName,
-                                type,
-                                position,
-                                size,
-                                null,
-                                element
-                        );
-                elements.add(layoutElement);
-                return elements;
-            default:
-                return scan(type);
+        if ("POSITION".equals(typeName)) {
+            final LayoutCollection elements = new LayoutCollection();
+            final SizeRepository size = methods.getSize(element);
+            if (size.isEmpty()) return elements;
+            final PositionRepository position = methods.getPosition(container, element);
+            final String tagName = methods.getTagName(element);
+            final LayoutElement layoutElement =
+                    new LayoutElement(
+                            name,
+                            tagName,
+                            type,
+                            position,
+                            size,
+                            null,
+                            element
+                    );
+            elements.add(layoutElement);
+            return elements;
         }
+        return scan(type);
     }
 
-    private List<LayoutElement> scan(final IMeasuringType type) {
+    private LayoutCollection scan(final IMeasuringType type) {
         return LayoutConfiguration.INSTANCE.getMethods().findElementsByXpath(element, type.getXpath())
                 .stream()
                 .map(o -> createLayoutElement(o, type))
                 .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(e -> e.getData().check())
+                .collect(Collectors.toMap(LayoutElement::getId, e -> e, (a, b) -> b, LayoutCollection::new));
     }
 
     @SneakyThrows
     private LayoutElement createLayoutElement(final Object subElement, final IMeasuringType type) {
-        final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethods();
+
         final SizeRepository size = methods.getSize(subElement);
         if (size.isEmpty()) return null;
         final PositionRepository position = methods.getPosition(container, subElement);

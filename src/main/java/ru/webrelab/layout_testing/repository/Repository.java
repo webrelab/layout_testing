@@ -5,6 +5,7 @@ import ru.webrelab.layout_testing.screen_difference.DifferentElements;
 import ru.webrelab.layout_testing.ifaces.IRepository;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,8 @@ abstract class Repository implements IRepository {
         final Field[] fields = getClass().getDeclaredFields();
         final Map<String, Object> map = new HashMap<>();
         for (final Field field : fields) {
+            field.setAccessible(true);
+            if (Modifier.isTransient(field.getModifiers())) continue;
             map.put(field.getName(), field.get(this));
         }
         return map;

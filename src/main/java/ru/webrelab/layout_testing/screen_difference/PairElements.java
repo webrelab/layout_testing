@@ -1,9 +1,11 @@
 package ru.webrelab.layout_testing.screen_difference;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.webrelab.layout_testing.LayoutElement;
-import ru.webrelab.layout_testing.Tree;
+import ru.webrelab.layout_testing.LayoutTestingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,20 +13,29 @@ import java.util.List;
 @Getter
 @Setter
 public class PairElements {
-    private final Tree<LayoutElement> actual;
-    private final Tree<LayoutElement> expected;
+    private final LayoutElement actual;
+    private final LayoutElement expected;
     private final boolean equalsSignature;
     private final int violation;
     private final boolean equalsData;
     private boolean mapped = false;
     private boolean hasDifference = false;
 
-    public PairElements(final Tree<LayoutElement> actual, final Tree<LayoutElement> expected) {
+    public PairElements(final LayoutElement actual, final LayoutElement expected) {
         this.actual = actual;
         this.expected = expected;
-        equalsSignature = actual.getValue().compareSignature(expected.getValue());
-        violation =  equalsSignature ? actual.getValue().getDimensionViolation(expected.getValue()) : -1;
-        equalsData = equalsSignature && actual.getValue().getData().equals(expected.getValue().getData());
+        equalsSignature = actual.compareSignature(expected);
+        violation =  equalsSignature ? actual.getDimensionViolation(expected) : -1;
+        try {
+            equalsData = equalsSignature
+                    && actual.getTagName().equals(expected.getTagName())
+                    && actual.getData().compareWith(expected.getData()).isEmpty();
+        } catch (final NullPointerException e) {
+            final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            System.out.println("Actual object:\n" + gson.toJson(actual));
+            System.out.println("Expected object:\n" + gson.toJson(expected));
+            throw new LayoutTestingException(e);
+        }
     }
 
     public boolean isEqualsByViolation(final int violation) {
@@ -35,9 +46,9 @@ public class PairElements {
     public List<DifferentElements> getDifference() {
         final List<DifferentElements> diffs = new ArrayList<>();
         if (equalsSignature) {
-            diffs.addAll(actual.getValue().getPosition().compareWith(expected.getValue().getPosition()));
-            diffs.addAll(actual.getValue().getSize().compareWith(expected.getValue().getSize()));
-            diffs.addAll(actual.getValue().getData().compareWith(expected.getValue().getData()));
+            diffs.addAll(actual.getPosition().compareWith(expected.getPosition()));
+            diffs.addAll(actual.getSize().compareWith(expected.getSize()));
+            diffs.addAll(actual.getData().compareWith(expected.getData()));
         }
         return diffs;
     }
