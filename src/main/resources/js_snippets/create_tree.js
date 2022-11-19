@@ -1,7 +1,7 @@
-let elementTree = function (map) {
+function handler(map) {
     let a = [];
-    for (parentId in map) {
-        for (childId in map) {
+    for (let parentId in map) {
+        for (let childId in map) {
             if (parentId === childId) continue
             if (map[parentId] === map[childId]) continue;
             if (map[parentId].contains(map[childId])) {
@@ -11,4 +11,3 @@ let elementTree = function (map) {
     }
     return a;
 }
-return elementTree(arguments[0]);

@@ -50,12 +50,16 @@ public class PageScanner {
     }
 
     private LayoutCollection scan(final IMeasuringType type) {
-        return LayoutConfiguration.INSTANCE.getMethods().findElementsByXpath(element, type.getXpath())
-                .stream()
-                .map(o -> createLayoutElement(o, type))
-                .filter(Objects::nonNull)
-                .filter(e -> e.getData().check())
-                .collect(Collectors.toMap(LayoutElement::getId, e -> e, (a, b) -> b, LayoutCollection::new));
+        try {
+            return LayoutConfiguration.INSTANCE.getMethods().findElementsByXpath(element, type.getXpath())
+                    .stream()
+                    .map(o -> createLayoutElement(o, type))
+                    .filter(Objects::nonNull)
+                    .filter(e -> e.getData().check())
+                    .collect(Collectors.toMap(LayoutElement::getId, e -> e, (a, b) -> b, LayoutCollection::new));
+        } catch (NullPointerException e) {
+            throw new LayoutTestingException(e);
+        }
     }
 
     @SneakyThrows
@@ -65,7 +69,7 @@ public class PageScanner {
         if (size.isEmpty()) return null;
         final PositionRepository position = methods.getPosition(container, subElement);
         final IRepository measuredData = type.getRepositoryClass().getConstructor(Object.class).newInstance(subElement);
-        final String tagName = methods.getTagName(subElement);
+        final String tagName = methods.getTagName(subElement).toLowerCase();
         return new LayoutElement(
                 name,
                 tagName,

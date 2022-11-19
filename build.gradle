@@ -18,6 +18,9 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10'
     testImplementation 'org.seleniumhq.selenium:selenium-chrome-driver:4.6.0'
     testImplementation 'org.seleniumhq.selenium:selenium-devtools-v107:4.6.0'
+
+    testImplementation 'com.microsoft.playwright:playwright:1.27.1'
+
 }
 
 test {

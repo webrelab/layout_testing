@@ -32,7 +32,6 @@ public class PairSifter {
         cleanEqualsWithViolation();
         searchForDataDifference();
         searchForSizeDifference();
-        searchForFullDifference();
         searchForLostAndExtraElements();
         return reports;
     }
@@ -57,7 +56,7 @@ public class PairSifter {
     private void searchForDataDifference() {
         sieveStream(
                 pair -> reports.add(new DifferenceReport(pair)),
-                p -> p.isEqualsSignature() && p.getViolation() < LayoutConfiguration.INSTANCE.getTolerance()
+                p -> p.isEqualsSignature() && !p.isEqualsData() && p.getViolation() < LayoutConfiguration.INSTANCE.getTolerance()
         );
         removePairsContainsSievedElements();
     }
@@ -70,32 +69,29 @@ public class PairSifter {
         removePairsContainsSievedElements();
     }
 
-    private void searchForFullDifference() {
-        sieveStream(pair -> reports.add(new DifferenceReport(pair)), p -> true);
+    private void searchForLostAndExtraElements() {
+        pairElements.forEach(pair -> {
+            if (!sievedActual.contains(pair.getActual().getId()) && sievedExpected.contains(pair.getExpected().getId())) {
+                sievedActual.add(pair.getActual().getId());
+                reports.add(new DifferenceReport(pair.getActual(), null));
+            } else if (sievedActual.contains(pair.getActual().getId()) && !sievedExpected.contains(pair.getExpected().getId())) {
+                sievedExpected.add(pair.getExpected().getId());
+                reports.add(new DifferenceReport(null, pair.getExpected()));
+            }
+        });
         removePairsContainsSievedElements();
     }
 
-    private void searchForLostAndExtraElements() {
-        sieveStream(
-                pair -> {
-                    if (!sievedActual.contains(pair.getActual().getId())) {
-                        reports.add(new DifferenceReport(pair.getActual(), null));
-                    } else if (!sievedExpected.contains(pair.getExpected().getId())) {
-                        reports.add(new DifferenceReport(null, pair.getExpected()));
-                    }
-                },
-                p -> true
-        );
-    }
-
     private void sieveStream(final Consumer<PairElements> reportCollect, final Predicate<? super PairElements> predicate) {
-        final Map<String, PairElements> sieved = new HashMap<>();
+        final Set<String> localActual = new HashSet<>();
+        final Set<String> localExpected = new HashSet<>();
         pairElements.stream()
                 .filter(predicate)
-                .sorted(Comparator.comparingInt(PairElements::getViolation))
+                .sorted(Comparator.comparingInt(PairElements::getViolation).thenComparing(p -> p.isEqualId() ? -1 : 1))
                 .forEachOrdered(pair -> {
-                    if (!sieved.containsKey(pair.getActual().getId())) {
-                        sieved.put(pair.getActual().getId(), pair);
+                    if (!localActual.contains(pair.getActual().getId()) && !localExpected.contains(pair.getExpected().getId())) {
+                        localActual.add(pair.getActual().getId());
+                        localExpected.add(pair.getExpected().getId());
                         sievedActual.add(pair.getActual().getId());
                         sievedExpected.add(pair.getExpected().getId());
                         if (reportCollect != null) {

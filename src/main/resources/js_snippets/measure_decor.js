@@ -1,7 +1,7 @@
-let decorMeasureClasses = function (argument) {
+function handler(arg) {
     let nodes = ['div', 'a', 'p', 'button', 'span', 'section', 'aside', 'input', 'textarea'];
     nodes.forEach(node => {
-        [...argument.getElementsByTagName(node)]
+        [...document.body.getElementsByTagName(node)]
             .forEach(e => {
                 let c = window.getComputedStyle(e);
                 if (c['display'] !== 'none' && (c['borderRadius'] !== '0px' || c['borderWidth'] !== '0px' ||
@@ -11,5 +11,4 @@ let decorMeasureClasses = function (argument) {
                 }
             });
     });
-};
-decorMeasureClasses(document.body);
+}

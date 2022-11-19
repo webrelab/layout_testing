@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.webrelab.layout_testing.enums.MeasuringType;
 import ru.webrelab.layout_testing.enums.ScreenSize;
+import ru.webrelab.layout_testing.ifaces.IFrameworkBasedBehavior;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IScreenSize;
@@ -20,6 +21,7 @@ public class LayoutConfiguration {
     private String actualElementColor = "red";
     private String expectedElementColor = "green";
     private IMethodsInjection methodsInjection;
+    private IFrameworkBasedBehavior frameworkBasedBehavior;
 
     private LayoutConfiguration() {}
 
@@ -28,5 +30,11 @@ public class LayoutConfiguration {
             throw new LayoutTestingException("You must set 'methodsInjection' in LayoutConfiguration class");
         }
         return methodsInjection;
+    }
+    public IFrameworkBasedBehavior getFrameworkBasedBehavior() {
+        if (Objects.isNull(frameworkBasedBehavior)) {
+            throw new LayoutTestingException("You must set 'frameworkBasedBehavior' in LayoutConfiguration class");
+        }
+        return frameworkBasedBehavior;
     }
 }

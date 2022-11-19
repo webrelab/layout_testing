@@ -1,4 +1,5 @@
-function beforeAfterWalker(node) {
+function handler(node) {
+    if (node === null || node === undefined) node = document.body;
     [...node.children].forEach(e => {
         try {
             if (window.getComputedStyle(e, ':after')
@@ -10,8 +11,6 @@ function beforeAfterWalker(node) {
             }
         } catch (f) {
         }
-        beforeAfterWalker(e);
+        handler(e);
     })
 }
-
-beforeAfterWalker(document.body);

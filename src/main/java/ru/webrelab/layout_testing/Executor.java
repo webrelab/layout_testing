@@ -1,6 +1,7 @@
 package ru.webrelab.layout_testing;
 
 import lombok.SneakyThrows;
+import ru.webrelab.layout_testing.ifaces.IFrameworkBasedBehavior;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IScreenSize;
@@ -8,7 +9,6 @@ import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.RawDataSet;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
 import ru.webrelab.layout_testing.snippets.Snippet;
-import ru.webrelab.layout_testing.snippets.SnippetsRepository;
 import ru.webrelab.layout_testing.utils.DataTransformer;
 import ru.webrelab.layout_testing.utils.ReadWriteUtils;
 import ru.webrelab.layout_testing.utils.ScreenDraw;
@@ -52,7 +52,7 @@ public class Executor {
 
         if (!ReadWriteUtils.isFileExist(measureScenarioName, browserName, currentScreenSize, storagePath)) {
             final ScreenDraw screenDraw = new ScreenDraw(container);
-            actualLayoutElements.forEach((k, v) -> screenDraw.draw(ScreenDraw.Color.EXPECTED, v));
+            actualLayoutElements.forEach((k, v) -> screenDraw.draw(ScreenDraw.CssClass.EXPECTED, v));
             ReadWriteUtils.write(
                     DataTransformer.serialize(actualLayoutElements),
                     measureScenarioName,
@@ -83,9 +83,10 @@ public class Executor {
     }
 
     private void prepare() {
-        methods.executeJs(SnippetsRepository.INSTANCE.getSnippet(Snippet.MEASURE_TEXT.getSnippet()));
-        methods.executeJs(SnippetsRepository.INSTANCE.getSnippet(Snippet.MEASURE_BEFORE_AFTER.getSnippet()));
-        methods.executeJs(SnippetsRepository.INSTANCE.getSnippet(Snippet.MEASURE_DECOR.getSnippet()));
+        final IFrameworkBasedBehavior behavior = LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior();
+        behavior.jsExecutor(Snippet.MEASURE_TEXT, null);
+        behavior.jsExecutor(Snippet.MEASURE_BEFORE_AFTER, null);
+        behavior.jsExecutor(Snippet.MEASURE_DECOR, null);
     }
 
     private LayoutCollection scanScreen() {

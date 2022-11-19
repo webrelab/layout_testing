@@ -1,4 +1,4 @@
-(function () {
+function handler(arg) {
     let t = document.createElement('div');
     t.id = 'visualisationContainer';
     t.innerHTML = '<style>\n' +
@@ -9,7 +9,7 @@
         'border: 1px solid EXPECTED_COLOR_VALUE;}\n' +
         '</style>';
     document.body.appendChild(t);
-}());
+}
 
 function getMaxHeight() {
     let currentMax = {'value': 0};

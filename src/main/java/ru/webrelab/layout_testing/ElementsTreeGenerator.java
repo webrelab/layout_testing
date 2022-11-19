@@ -16,10 +16,10 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
 
     @SuppressWarnings("unchecked")
     public void createTree() {
-        final List<Map<String, String>> response = (List<Map<String, String>>) LayoutConfiguration.INSTANCE.getMethods().executeJs(
-                SnippetsRepository.INSTANCE.getSnippet(Snippet.CREATE_TREE.getSnippet()),
-                this
-        );
+        final List<Map<String, String>> response =
+                (List<Map<String, String>>) LayoutConfiguration.INSTANCE
+                        .getFrameworkBasedBehavior()
+                        .jsExecutor(Snippet.CREATE_TREE, this);
         final Map<String, List<String>> childToParentPairs = new HashMap<>();
         for (final Map<String, String> e : response) {
             final String parent = e.get("parent");

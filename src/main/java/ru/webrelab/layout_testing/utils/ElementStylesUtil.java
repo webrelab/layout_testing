@@ -1,6 +1,8 @@
 package ru.webrelab.layout_testing.utils;
 
+import com.google.gson.Gson;
 import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.snippets.Snippet;
 import ru.webrelab.layout_testing.snippets.SnippetsRepository;
 
@@ -12,9 +14,18 @@ public class ElementStylesUtil {
 
     @SuppressWarnings("unchecked")
     public static Map<String, Object> getStyles(final Object webElement) {
-        final List<Map<String, Object>> data = (List<Map<String, Object>>) LayoutConfiguration.INSTANCE.getMethods().executeJs(
-                SnippetsRepository.INSTANCE.getSnippet(Snippet.GET_STYLES.getSnippet()), webElement);
+        final List<Map<String, Object>> data = (List<Map<String, Object>>) LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior().jsExecutor(
+                Snippet.GET_STYLES, webElement);
         return data.stream()
-                .collect(Collectors.toMap(m -> (String) m.get("name"), m -> m.get("value"), (a, b) -> b));
+                .filter(m -> m.size() == 2)
+                .collect(Collectors.toMap(m -> {
+                    String s = (String) m.get("name");
+                    if (s == null) throw new LayoutTestingException("Key is wrong:\n" + new Gson().toJson(m));
+                    return s;
+                }, m -> {
+                    Object s = m.get("value");
+                    if (s == null) throw new LayoutTestingException("Value is wrong:\n" + new Gson().toJson(m));
+                    return s;
+                }, (a, b) -> b));
     }
 }

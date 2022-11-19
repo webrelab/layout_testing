@@ -47,6 +47,14 @@ public interface IMethodsInjection {
     List<?> findElementsByXpath(Object object, String xpath);
 
     /**
+     * Метод требуется для получения списка веб-элемент по xpath, находящихся
+     * на странице без привязки к другим элементам
+     * @param xpath xpath для поиска
+     * @return список найденных веб-элементов (может быть пустым)
+     */
+    List<?> findElementsByXpath(String xpath);
+
+    /**
      * Метод требуется для получения текста из элемента
      * @param object веб-элемент
      * @return текст, полученный из веб-элемента
@@ -59,6 +67,14 @@ public interface IMethodsInjection {
      * @return имя тега переданного элемента
      */
     String getTagName(Object object);
+
+    /**
+     * Метод требуется для получения значения атрибута веб-элемента
+     * @param webElement веб-элемент
+     * @param attribute название атрибута
+     * @return значение атрибута
+     */
+    String getAttributeValue(Object webElement, String attribute);
 
     /**
      * Метод требуется для получения текущего размера вьюпорта (для браузера это

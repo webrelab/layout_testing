@@ -1,4 +1,4 @@
-function greed_draw(arg) {
+function handler(arg) {
     let div = document.createElement('div');
     div.classList.add(arg['color']);
     div.style.cssText =
@@ -8,5 +8,3 @@ function greed_draw(arg) {
         'height:' + arg['height'] + 'px;';
     document.getElementById('visualisationContainer').appendChild(div);
 }
-
-greed_draw(arguments[0]);

@@ -16,6 +16,7 @@ public class PairElements {
     private final LayoutElement actual;
     private final LayoutElement expected;
     private final boolean equalsSignature;
+    private final boolean isEqualId;
     private final int violation;
     private final boolean equalsData;
     private boolean mapped = false;
@@ -25,6 +26,7 @@ public class PairElements {
         this.actual = actual;
         this.expected = expected;
         equalsSignature = actual.compareSignature(expected);
+        isEqualId = actual.getId().equals(expected.getId());
         violation =  equalsSignature ? actual.getDimensionViolation(expected) : -1;
         try {
             equalsData = equalsSignature

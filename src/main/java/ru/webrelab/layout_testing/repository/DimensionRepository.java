@@ -27,8 +27,8 @@ public abstract class DimensionRepository extends Repository {
     private int getDifference(final int actual, final int expected) {
         if (actual == expected) return 0;
         int pixelDiff = Math.abs(actual - expected);
-        int percentDiff = expected == 0 ? 0 : Math.abs(1 - actual / expected) * 100;
-        return Math.max(pixelDiff, percentDiff);
+        int percentDiff = expected == 0 ? 0 : (int) (Math.abs(1 - actual / (double) expected) * 100);
+        return Math.min(pixelDiff, percentDiff);
     }
 
     @Override

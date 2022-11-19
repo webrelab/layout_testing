@@ -2,6 +2,7 @@ package ru.webrelab.layout_testing;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.webrelab.layout_testing.ElementsTreeGenerator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

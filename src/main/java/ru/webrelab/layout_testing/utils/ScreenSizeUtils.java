@@ -5,7 +5,9 @@ import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IScreenSize;
 import ru.webrelab.layout_testing.repository.SizeRepository;
+import ru.webrelab.layout_testing.snippets.Snippet;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class ScreenSizeUtils {
@@ -50,5 +52,12 @@ public class ScreenSizeUtils {
                                 )
                         )
                 );
+    }
+
+    @SuppressWarnings("unchecked")
+    public static SizeRepository getViewportSize() {
+        final Map<String, Long> response = (Map<String, Long>) LayoutConfiguration.INSTANCE
+                .getFrameworkBasedBehavior().jsExecutor(Snippet.GET_VIEWPORT_SIZE, null);
+        return new SizeRepository(response.get("height").intValue(), response.get("width").intValue());
     }
 }

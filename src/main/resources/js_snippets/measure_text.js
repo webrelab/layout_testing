@@ -1,4 +1,5 @@
-function f(arg) {
+function handler(arg) {
+    if (arg === null || arg === undefined) arg = document.body;
     let t = arg.innerText.replace(/[\n\s]/g, '').toLowerCase();
     if (t === undefined || t.length === 0) {
         return;
@@ -11,11 +12,9 @@ function f(arg) {
                 return;
             }
             t = t.replace(r.replace(/[\n\s]/g, '').toLowerCase(), '');
-            f(e);
+            handler(e);
         });
     if (t.trim().length > 0) {
         arg.classList.add('measuringTypeText');
     }
 }
-
-f(document.body);
