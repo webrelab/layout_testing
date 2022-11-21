@@ -1,6 +1,7 @@
 package ru.webrelab.layout_testing.repository;
 
 import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.ifaces.IRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferentElements;
 
@@ -34,5 +35,20 @@ public abstract class DimensionRepository extends Repository {
     @Override
     public boolean check() {
         return true;
+    }
+
+    @Override
+    public PositionRepository getPosition(PositionRepository container, Object webElement) {
+        throw new LayoutTestingException("This method should not be for this type of repository");
+    }
+
+    @Override
+    public SizeRepository getSize(Object webElement) {
+        throw new LayoutTestingException("This method should not be for this type of repository");
+    }
+
+    @Override
+    public String getTransform(Object webElement) {
+        throw new LayoutTestingException("This method should not be for this type of repository");
     }
 }

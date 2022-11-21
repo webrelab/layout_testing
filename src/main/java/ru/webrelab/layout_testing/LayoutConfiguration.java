@@ -25,7 +25,7 @@ public class LayoutConfiguration {
 
     private LayoutConfiguration() {}
 
-    public IMethodsInjection getMethods() {
+    public IMethodsInjection getMethodsInjection() {
         if (Objects.isNull(methodsInjection)) {
             throw new LayoutTestingException("You must set 'methodsInjection' in LayoutConfiguration class");
         }

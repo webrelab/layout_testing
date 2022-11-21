@@ -31,7 +31,8 @@ public class PairElements {
         try {
             equalsData = equalsSignature
                     && actual.getTagName().equals(expected.getTagName())
-                    && actual.getData().compareWith(expected.getData()).isEmpty();
+                    && actual.getData().compareWith(expected.getData()).isEmpty()
+                    && actual.getTransform().equals(expected.getTransform());
         } catch (final NullPointerException e) {
             final Gson gson = new GsonBuilder().setPrettyPrinting().create();
             System.out.println("Actual object:\n" + gson.toJson(actual));
@@ -51,6 +52,9 @@ public class PairElements {
             diffs.addAll(actual.getPosition().compareWith(expected.getPosition()));
             diffs.addAll(actual.getSize().compareWith(expected.getSize()));
             diffs.addAll(actual.getData().compareWith(expected.getData()));
+            if (!actual.getTransform().equals(expected.getTransform())) {
+                diffs.add(new DifferentElements("transform", actual.getTransform(), expected.getTransform()));
+            }
         }
         return diffs;
     }

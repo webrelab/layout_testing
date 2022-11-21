@@ -2,6 +2,7 @@ package ru.webrelab.layout_testing.repository;
 
 import lombok.Getter;
 import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.enums.MeasuringType;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.utils.EnumDetermination;
@@ -21,6 +22,17 @@ public class RawDataSet {
                 .map(String::trim)
                 .filter(s -> !s.isEmpty())
                 .map(EnumDetermination::determineMeasureEnum)
+                .flatMap(this::processMeasureType)
+                .toArray(IMeasuringType[]::new);
+    }
+
+    public RawDataSet(final String elementName, final Object element, final IMeasuringType... measureTypes) {
+        if (measureTypes.length == 0) {
+            throw new LayoutTestingException("You must set one or more measure types");
+        }
+        this.elementName = elementName;
+        this.element = element;
+        this.measureTypes = Stream.of(measureTypes)
                 .flatMap(this::processMeasureType)
                 .toArray(IMeasuringType[]::new);
     }

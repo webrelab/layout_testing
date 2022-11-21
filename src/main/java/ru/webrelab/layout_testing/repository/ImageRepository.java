@@ -3,7 +3,7 @@ package ru.webrelab.layout_testing.repository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import ru.webrelab.layout_testing.LayoutConfiguration;
+import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.net.URI;
 
@@ -20,7 +20,7 @@ public class ImageRepository extends AttributeRepository {
 
     @SneakyThrows
     public ImageRepository(final Object webElement) {
-        final String srcAttr = LayoutConfiguration.INSTANCE.getMethodsInjection().getAttributeValue(webElement, "src");
+        final String srcAttr = (String) ElementAttributesUtil.getAttribute(webElement,"src");
         src = srcAttr.startsWith("data:") ? srcAttr : new URI(srcAttr).getPath();
     }
 

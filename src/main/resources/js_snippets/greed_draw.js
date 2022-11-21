@@ -5,6 +5,7 @@ function handler(arg) {
         'top:' + arg['top'] + 'px;' +
         'left:' + arg['left'] + 'px;' +
         'width:' + arg['width'] + 'px;' +
-        'height:' + arg['height'] + 'px;';
+        'height:' + arg['height'] + 'px;' +
+        'transform:' + arg['transform'] + ';';
     document.getElementById('visualisationContainer').appendChild(div);
 }

@@ -8,7 +8,7 @@ import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferentElements;
 import ru.webrelab.layout_testing.snippets.Snippet;
-import ru.webrelab.layout_testing.utils.ElementStylesUtil;
+import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.util.*;
 
@@ -24,7 +24,7 @@ public class SvgRepository extends AttributeRepository {
     }
 
     public SvgRepository(final Object webElement) {
-        final String fill = (String) ElementStylesUtil.getStyles(webElement).get("fill");
+        final String fill = (String) ElementAttributesUtil.getStyles(webElement).get("fill");
         this.fill = fill == null ? "" : fill;
         final List<?> useElements = methods
                 .findElementsByXpath(webElement, "descendant-or-self::*[name() = 'use']");

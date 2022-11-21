@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.ifaces.IRepository;
-import ru.webrelab.layout_testing.repository.DecorRepository;
-import ru.webrelab.layout_testing.repository.ImageRepository;
-import ru.webrelab.layout_testing.repository.SvgRepository;
-import ru.webrelab.layout_testing.repository.TextRepository;
+import ru.webrelab.layout_testing.repository.*;
 
 @RequiredArgsConstructor
 @Getter
@@ -19,6 +16,8 @@ public enum MeasuringType implements IMeasuringType {
     DECOR("descendant-or-self::*[contains(@class, 'measuringTypeDecor')]", true, DecorRepository.class),
     IMAGE("descendant-or-self::img", true, ImageRepository.class),
     SVG("descendant-or-self::*[name() = 'svg']", true, SvgRepository.class),
+    PSEUDO_BEFORE("descendant-or-self::*[contains(@class, 'measuringBeforeElement')]", true, PseudoBeforeRepository.class),
+    PSEUDO_AFTER("descendant-or-self::*[contains(@class, 'measuringAfterElement')]", true, PseudoAfterRepository.class),
     ;
 
     private final String xpath;

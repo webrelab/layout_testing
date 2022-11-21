@@ -21,6 +21,7 @@ public class LayoutElement {
     private final PositionRepository position;
     private final SizeRepository size;
     private final IRepository data;
+    private final String transform;
     private transient final Object element;
     private String parent = "";
     private Set<String> children = new HashSet<>();
@@ -32,6 +33,7 @@ public class LayoutElement {
             PositionRepository position,
             SizeRepository size,
             IRepository data,
+            String transform,
             Object element
     ) {
         id = IdGen.getNew();
@@ -39,6 +41,7 @@ public class LayoutElement {
         this.tagName = tagName;
         this.type = type;
         this.data = data;
+        this.transform = transform;
         this.element = element;
         this.position = position;
         this.size = size;
@@ -56,6 +59,7 @@ public class LayoutElement {
         position = gson.fromJson(jsonObject.getAsJsonObject("position"), PositionRepository.class);
         size = gson.fromJson(jsonObject.getAsJsonObject("size"), SizeRepository.class);
         data = gson.fromJson(jsonObject.getAsJsonObject("data"), type.getRepositoryClass());
+        transform = jsonObject.getAsJsonPrimitive("transform").getAsString();
         element = null;
         parent = jsonObject.getAsJsonPrimitive("parent").getAsString();
         children = gson.fromJson(jsonObject.getAsJsonArray("children"), Set.class);

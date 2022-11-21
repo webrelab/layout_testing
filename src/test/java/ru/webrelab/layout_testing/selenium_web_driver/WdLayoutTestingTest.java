@@ -17,35 +17,43 @@ import java.util.List;
 
 public class WdLayoutTestingTest {
     private WebDriver driver;
+
     @BeforeEach
     void before() {
         new WdConfigurator().configure();
         driver = WdEnv.INSTANCE.driver;
     }
+
     @AfterEach
     void after() {
         driver.close();
         driver.quit();
     }
+
     @Test
-    public void testLargePage() {
+    public void testLargePage() throws InterruptedException {
 //        driver.get("https://les.media/articles/650884-chego-dobivaetsya-rodina");
-        driver.get("https://www.jetbrains.com/aqua/");
-        WebElement container = driver.findElement(By.className("page__content"));
+        driver.get("https://preview.cruip.com/solid/");
+
+        Thread.sleep(2000);
+        WebElement container = driver.findElement(By.tagName("body"));
         final List<RawDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(new RawDataSet("Develop block", container.findElement(By.id("develop")), MeasuringType.ALL.name()));
-        dataSetList.add(new RawDataSet("Follow us block", container.findElement(By.className("social-footer")), MeasuringType.ALL.name()));
+        dataSetList.add(new RawDataSet("All page", container,
+                MeasuringType.ALL
+        ));
+//        dataSetList.add(new RawDataSet("Follow us block", container.findElement(By.className("social-footer")), MeasuringType.ALL.name()));
 
         ScreenSizeUtils.setWindowSize(ScreenSize.DESKTOP);
         final Executor executorDesktop = new Executor(
                 dataSetList,
-                "container_fragment",
-                "jetbrains; aqua",
+                "full_page",
+                "cruip; landing",
                 "CHROME",
                 container
         );
         executorDesktop.execute();
 
+        Thread.sleep(10000);
 
     }
 

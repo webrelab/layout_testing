@@ -3,7 +3,7 @@ package ru.webrelab.layout_testing.repository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.LayoutConfiguration;
-import ru.webrelab.layout_testing.utils.ElementStylesUtil;
+import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.util.Map;
 import java.util.Objects;
@@ -22,7 +22,7 @@ public class TextRepository extends AttributeRepository {
     private final String content;
 
     public TextRepository(final Object webElement) {
-        final Map<String, Object> styles = ElementStylesUtil.getStyles(webElement);
+        final Map<String, Object> styles = ElementAttributesUtil.getStyles(webElement);
         fontFamily = Objects.requireNonNull((String) styles.get("fontFamily"));
         fontSize = Objects.requireNonNull((String) styles.get("fontSize"));
         fontWeight = Objects.requireNonNull((String) styles.get("fontWeight"));
@@ -31,7 +31,7 @@ public class TextRepository extends AttributeRepository {
         fontVariant = Objects.requireNonNull((String) styles.get("fontVariant"));
         textDecoration = Objects.requireNonNull((String) styles.get("textDecoration"));
         textShadow = Objects.requireNonNull((String) styles.get("textShadow"));
-        content = LayoutConfiguration.INSTANCE.getMethods().getText(webElement);
+        content = LayoutConfiguration.INSTANCE.getMethodsInjection().getText(webElement);
     }
 
     @Override

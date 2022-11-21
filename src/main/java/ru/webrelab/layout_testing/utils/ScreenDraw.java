@@ -36,6 +36,7 @@ public class ScreenDraw {
         block.put("height", layoutElement.getSize().getHeight());
         block.put("width", layoutElement.getSize().getWidth());
         block.put("color", cssClass.className);
+        block.put("transform", layoutElement.getTransform());
 
         LayoutConfiguration.INSTANCE
                 .getFrameworkBasedBehavior().jsExecutor(Snippet.GREED_DRAW, block);

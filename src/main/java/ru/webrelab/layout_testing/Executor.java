@@ -24,7 +24,7 @@ public class Executor {
     private final String browserName;
     private final PositionRepository container;
     private final IScreenSize currentScreenSize = ScreenSizeUtils.determineScreenSize();
-    private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethods();
+    private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethodsInjection();
 
     public Executor(
             final List<RawDataSet> dataSetList,
@@ -85,8 +85,9 @@ public class Executor {
     private void prepare() {
         final IFrameworkBasedBehavior behavior = LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior();
         behavior.jsExecutor(Snippet.MEASURE_TEXT, null);
-        behavior.jsExecutor(Snippet.MEASURE_BEFORE_AFTER, null);
+        behavior.jsExecutor(Snippet.MEASURE_PSEUDO_ELEMENTS, null);
         behavior.jsExecutor(Snippet.MEASURE_DECOR, null);
+        behavior.jsExecutor(Snippet.MEASURE_PSEUDO_ELEMENTS, null);
     }
 
     private LayoutCollection scanScreen() {

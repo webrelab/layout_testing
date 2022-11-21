@@ -6,6 +6,7 @@ import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.ifaces.IRepository;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
+import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ public class PageScanner {
     private final PositionRepository container;
     private final Object element;
     private final IMeasuringType type;
-    private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethods();
+    private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethodsInjection();
 
     public PageScanner(String name, PositionRepository container, Object element, IMeasuringType type) {
         this.name = name;
@@ -33,6 +34,7 @@ public class PageScanner {
             if (size.isEmpty()) return elements;
             final PositionRepository position = methods.getPosition(container, element);
             final String tagName = methods.getTagName(element);
+            final String transform = (String) ElementAttributesUtil.getStyles(element).get("transform");
             final LayoutElement layoutElement =
                     new LayoutElement(
                             name,
@@ -41,6 +43,7 @@ public class PageScanner {
                             position,
                             size,
                             null,
+                            transform,
                             element
                     );
             elements.add(layoutElement);
@@ -51,7 +54,7 @@ public class PageScanner {
 
     private LayoutCollection scan(final IMeasuringType type) {
         try {
-            return LayoutConfiguration.INSTANCE.getMethods().findElementsByXpath(element, type.getXpath())
+            return LayoutConfiguration.INSTANCE.getMethodsInjection().findElementsByXpath(element, type.getXpath())
                     .stream()
                     .map(o -> createLayoutElement(o, type))
                     .filter(Objects::nonNull)
@@ -65,10 +68,11 @@ public class PageScanner {
     @SneakyThrows
     private LayoutElement createLayoutElement(final Object subElement, final IMeasuringType type) {
 
-        final SizeRepository size = methods.getSize(subElement);
-        if (size.isEmpty()) return null;
-        final PositionRepository position = methods.getPosition(container, subElement);
         final IRepository measuredData = type.getRepositoryClass().getConstructor(Object.class).newInstance(subElement);
+        final SizeRepository size = measuredData.getSize(subElement);
+        if (size.isEmpty()) return null;
+        final PositionRepository position = measuredData.getPosition(container, subElement);
+        final String transform = measuredData.getTransform(subElement);
         final String tagName = methods.getTagName(subElement).toLowerCase();
         return new LayoutElement(
                 name,
@@ -77,6 +81,7 @@ public class PageScanner {
                 position,
                 size,
                 measuredData,
+                transform,
                 subElement
         );
     }

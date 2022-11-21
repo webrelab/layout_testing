@@ -17,7 +17,7 @@ public class ScreenSizeUtils {
     }
 
     public static void setWindowSize(final IScreenSize screenSize) {
-        final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethods();
+        final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethodsInjection();
         SizeRepository currentSize = methods.getWindowBodySize();
         int counter = 0;
         while (
@@ -38,7 +38,7 @@ public class ScreenSizeUtils {
     }
 
     public static IScreenSize determineScreenSize() {
-        final SizeRepository currentSize = LayoutConfiguration.INSTANCE.getMethods().getWindowBodySize();
+        final SizeRepository currentSize = LayoutConfiguration.INSTANCE.getMethodsInjection().getWindowBodySize();
         return Stream.of(LayoutConfiguration.INSTANCE.getDefaultScreenSizeEnum().getEnumConstants())
                 .filter(d -> Math.abs(d.getHeight() - currentSize.getHeight()) < 3 &&
                         Math.abs(d.getWidth() - currentSize.getWidth()) < 3)

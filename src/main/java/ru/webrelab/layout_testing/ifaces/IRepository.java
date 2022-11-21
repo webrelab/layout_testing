@@ -1,5 +1,7 @@
 package ru.webrelab.layout_testing.ifaces;
 
+import ru.webrelab.layout_testing.repository.PositionRepository;
+import ru.webrelab.layout_testing.repository.SizeRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferentElements;
 
 import java.util.List;
@@ -37,4 +39,18 @@ public interface IRepository {
      * @return false если элемент не пригоден для тестирования
      */
     boolean check();
+
+    /**
+     * Метод предоставляет возможность рассчитать позицию элемента
+     * @param container позиция контейнера относительно которой рассчитывается позиция элемента
+     * @return объект PositionRepository с координатами элемента
+     */
+    PositionRepository getPosition(PositionRepository container, Object webElement);
+
+    /**
+     * Метод предоставляет возможность рассчитать размеры элемента
+     * @return объект SizeRepository с размером элемента
+     */
+    SizeRepository getSize(Object webElement);
+    String getTransform(Object webElement);
 }
