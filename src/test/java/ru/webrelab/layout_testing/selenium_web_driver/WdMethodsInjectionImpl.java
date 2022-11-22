@@ -69,6 +69,11 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
     }
 
     @Override
+    public void actionsBeforeTesting() {
+        // do nothing
+    }
+
+    @Override
     public void actionAfterTestFailed(List<DifferenceReport> reports) {
         try {
             Thread.sleep(15000);

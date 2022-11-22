@@ -20,8 +20,10 @@ public class ImageRepository extends AttributeRepository {
 
     @SneakyThrows
     public ImageRepository(final Object webElement) {
-        final String srcAttr = (String) ElementAttributesUtil.getAttribute(webElement,"src");
-        src = srcAttr.startsWith("data:") ? srcAttr : new URI(srcAttr).getPath();
+        final String srcAttr = (String) ElementAttributesUtil.getAttribute(webElement, "src");
+        src = (srcAttr.startsWith("http://") || srcAttr.startsWith("https://")) ?
+                new URI(srcAttr).getPath() :
+                srcAttr;
     }
 
     @Override

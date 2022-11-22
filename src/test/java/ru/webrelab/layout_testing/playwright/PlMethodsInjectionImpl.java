@@ -73,6 +73,11 @@ public class PlMethodsInjectionImpl implements IMethodsInjection {
     }
 
     @Override
+    public void actionsBeforeTesting() {
+        // do nothing
+    }
+
+    @Override
     public void actionAfterTestFailed(List<DifferenceReport> reports) {
         reports.stream().map(DifferenceReport::toString).forEach(System.out::println);
         try {

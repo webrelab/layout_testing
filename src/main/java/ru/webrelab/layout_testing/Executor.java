@@ -25,6 +25,7 @@ public class Executor {
     private final PositionRepository container;
     private final IScreenSize currentScreenSize = ScreenSizeUtils.determineScreenSize();
     private final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethodsInjection();
+    private final Runnable prepareFunction;
 
     public Executor(
             final List<RawDataSet> dataSetList,
@@ -32,6 +33,24 @@ public class Executor {
             final String storagePath,
             final String browserName,
             final Object containerElement
+    ) {
+        this(
+                dataSetList,
+                measureScenarioName,
+                storagePath,
+                browserName,
+                containerElement,
+                () -> {}
+        );
+    }
+
+    public Executor(
+            final List<RawDataSet> dataSetList,
+            final String measureScenarioName,
+            final String storagePath,
+            final String browserName,
+            final Object containerElement,
+            final Runnable prepareFunction
     ) {
         this.dataSetList = dataSetList;
         this.measureScenarioName = measureScenarioName;
@@ -43,6 +62,7 @@ public class Executor {
         final PositionRepository initialPosition = new PositionRepository(0, 0);
         container = containerElement == null ? initialPosition :
                 methods.getPosition(initialPosition, containerElement);
+        this.prepareFunction = prepareFunction;
     }
 
     @SneakyThrows
@@ -83,6 +103,8 @@ public class Executor {
     }
 
     private void prepare() {
+        prepareFunction.run();
+        LayoutConfiguration.INSTANCE.getMethodsInjection().actionsBeforeTesting();
         final IFrameworkBasedBehavior behavior = LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior();
         behavior.jsExecutor(Snippet.MEASURE_TEXT, null);
         behavior.jsExecutor(Snippet.MEASURE_PSEUDO_ELEMENTS, null);
