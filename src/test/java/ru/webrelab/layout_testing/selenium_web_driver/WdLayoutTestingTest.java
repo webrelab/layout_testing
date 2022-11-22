@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.webrelab.layout_testing.Executor;
 import ru.webrelab.layout_testing.enums.MeasuringType;
 import ru.webrelab.layout_testing.enums.ScreenSize;
@@ -34,8 +37,10 @@ public class WdLayoutTestingTest {
     public void testLargePage() throws InterruptedException {
 //        driver.get("https://les.media/articles/650884-chego-dobivaetsya-rodina");
         driver.get("https://preview.cruip.com/solid/");
-
-        Thread.sleep(2000);
+        Thread.sleep(1000);
+        Actions actions = new Actions(driver);
+        actions.scrollToElement(driver.findElement(By.className("site-footer"))).build().perform();
+        actions.scrollByAmount(0, -10000).build().perform();
         WebElement container = driver.findElement(By.tagName("body"));
         final List<RawDataSet> dataSetList = new ArrayList<>();
         dataSetList.add(new RawDataSet("All page", container,
@@ -43,7 +48,7 @@ public class WdLayoutTestingTest {
         ));
 //        dataSetList.add(new RawDataSet("Follow us block", container.findElement(By.className("social-footer")), MeasuringType.ALL.name()));
 
-        ScreenSizeUtils.setWindowSize(ScreenSize.DESKTOP);
+        ScreenSizeUtils.setWindowSize(ScreenSize.FULL_HD);
         final Executor executorDesktop = new Executor(
                 dataSetList,
                 "full_page",

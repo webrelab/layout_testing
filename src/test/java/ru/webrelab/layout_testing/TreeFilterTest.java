@@ -13,7 +13,7 @@ public class TreeFilterTest {
 
     @Test
     void filter1() {
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(new HashMap<>());
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(new HashMap<>(), null);
         Assertions.assertEquals(new HashMap<>(), filter.filter());
     }
 
@@ -23,7 +23,7 @@ public class TreeFilterTest {
                 "2", List.of("1")
         );
         Map<String, String> expected = Map.of("2", "1");
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(map);
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(map, null);
         Assertions.assertEquals(expected, filter.filter());
     }
 
@@ -38,7 +38,7 @@ public class TreeFilterTest {
                 "7", "8",
                 "9", "8"
         );
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(map);
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(map, null);
         Assertions.assertEquals(expected, filter.filter());
     }
 
@@ -56,7 +56,7 @@ public class TreeFilterTest {
                 "4", "2",
                 "5", "2"
         );
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(map);
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(map, null);
         final Map<String, String> result = filter.filter();
         printTree(result);
         Assertions.assertEquals(expected, result);
@@ -80,7 +80,7 @@ public class TreeFilterTest {
                 "7", "8",
                 "9", "8"
         );
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(map);
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(map, null);
         Assertions.assertEquals(expected, filter.filter());
     }
 
@@ -106,7 +106,7 @@ public class TreeFilterTest {
                 "3", "1",
                 "4", "1"
         );
-        final ElementsTreeGenerator.TreeFilter<String> filter = new ElementsTreeGenerator.TreeFilter<>(map);
+        final ElementsTreeGenerator.TreeFilter filter = new ElementsTreeGenerator.TreeFilter(map, null);
         final Map<String, String> result = filter.filter();
         printTree(result);
         Assertions.assertEquals(expected, result);

@@ -23,13 +23,6 @@ public interface IMethodsInjection {
     PositionRepository getPosition(PositionRepository container, Object object);
 
     /**
-     * Метод требуется для получения размера веб-элемента
-     * @param object веб-элемент
-     * @return объект SizeRepository с текущими размерами элемента
-     */
-    SizeRepository getSize(Object object);
-
-    /**
      * Метод требуется для исполнения Javascript кода на тестируемой странице.
      * @param js текст скрипта
      * @param objects список объектов, которые должны быть переданы в скрипт

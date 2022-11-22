@@ -12,12 +12,12 @@ public enum MeasuringType implements IMeasuringType {
     POSITION(".", false, null),
     COMPLEX("", false, null),
     ALL(COMPLEX.xpath, COMPLEX.complex, COMPLEX.repositoryClass),
-    TEXT("descendant-or-self::*[contains(@class, 'measuringTypeText')]", true, TextRepository.class),
     DECOR("descendant-or-self::*[contains(@class, 'measuringTypeDecor')]", true, DecorRepository.class),
+    TEXT("descendant-or-self::*[contains(@class, 'measuringTypeText')]", true, TextRepository.class),
     IMAGE("descendant-or-self::img", true, ImageRepository.class),
-    SVG("descendant-or-self::*[name() = 'svg']", true, SvgRepository.class),
     PSEUDO_BEFORE("descendant-or-self::*[contains(@class, 'measuringBeforeElement')]", true, PseudoBeforeRepository.class),
     PSEUDO_AFTER("descendant-or-self::*[contains(@class, 'measuringAfterElement')]", true, PseudoAfterRepository.class),
+    SVG("descendant-or-self::*[name() = 'svg']", true, SvgRepository.class),
     ;
 
     private final String xpath;

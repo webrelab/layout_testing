@@ -14,6 +14,7 @@ public enum Snippet implements ISnippetEnum {
     SVG_SCAN("svg_scan.js"),
     PSEUDO_ELEMENTS_ATTR("pseudo_elements_attr.js"),
     GET_ELEMENT_ATTRIBUTES("get_element_attributes.js"),
+    GET_ELEMENT_SIZE("get_element_size.js"),
     ;
     private final String snippet;
 

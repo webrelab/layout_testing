@@ -30,7 +30,7 @@ public class PageScanner {
 
         if ("POSITION".equals(typeName)) {
             final LayoutCollection elements = new LayoutCollection();
-            final SizeRepository size = methods.getSize(element);
+            final SizeRepository size = LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior().getSize(element);
             if (size.isEmpty()) return elements;
             final PositionRepository position = methods.getPosition(container, element);
             final String tagName = methods.getTagName(element);

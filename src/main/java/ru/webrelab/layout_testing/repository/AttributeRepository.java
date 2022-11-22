@@ -26,7 +26,7 @@ public abstract class AttributeRepository extends Repository {
 
     @Override
     public SizeRepository getSize(final Object webElement) {
-        return LayoutConfiguration.INSTANCE.getMethodsInjection().getSize(webElement);
+        return LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior().getSize(webElement);
     }
 
     @Override

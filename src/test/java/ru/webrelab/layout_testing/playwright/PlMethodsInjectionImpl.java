@@ -21,13 +21,6 @@ public class PlMethodsInjectionImpl implements IMethodsInjection {
     }
 
     @Override
-    public SizeRepository getSize(Object object) {
-        final BoundingBox box = ((ElementHandle) object).boundingBox();
-        if (box == null) return new SizeRepository(0, 0);
-        return new SizeRepository((int) box.height, (int) box.width);
-    }
-
-    @Override
     public Object executeJs(String js, Object... objects) {
         if (objects.length > 1) {
             return PlEnv.INSTANCE.getPage().evaluate(js, Arrays.asList(objects));

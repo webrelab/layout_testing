@@ -26,10 +26,13 @@ public class PlLayoutTestingTest {
     @Test
     void testLargePage() throws InterruptedException {
         page.navigate("https://preview.cruip.com/solid/");
-        page.setViewportSize(ScreenSize.DESKTOP.getWidth(), ScreenSize.DESKTOP.getHeight());
+        Thread.sleep(2000);
+        page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight());
         ElementHandle container = page.querySelector("//body");
         final List<RawDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(new RawDataSet("All page", container, MeasuringType.ALL));
+        dataSetList.add(new RawDataSet("All page", container,
+                MeasuringType.ALL
+        ));
 //        dataSetList.add(new RawDataSet("Follow us block", container.querySelector(".social-footer"), MeasuringType.ALL.name()));
 
         final Executor executorDesktop = new Executor(

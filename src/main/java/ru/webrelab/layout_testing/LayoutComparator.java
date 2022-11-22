@@ -5,6 +5,7 @@ import ru.webrelab.layout_testing.screen_difference.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class LayoutComparator {
@@ -26,6 +27,15 @@ public class LayoutComparator {
         final List<DifferenceReport> reports = sifter.sift();
         for (final PairElements pair : sifter.getEquivalentPairs()) {
             final PairCollection internalPairCollection = new PairCollection();
+            if (pair.getActual().getChildren().isEmpty() != pair.getExpected().getChildren().isEmpty()) {
+                pair.getActual().getChildren().forEach(child -> reports.add(
+                        new DifferenceReport(actualElements.get(child), null)
+                ));
+                pair.getExpected().getChildren().forEach(child -> reports.add(
+                        new DifferenceReport(null, expectedElements.get(child))
+                ));
+                continue;
+            }
             for (final String actual : pair.getActual().getChildren()) {
                 for (final String expected : pair.getExpected().getChildren()) {
                     internalPairCollection.add(new PairElements(actualElements.get(actual), expectedElements.get(expected)));

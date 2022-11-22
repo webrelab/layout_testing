@@ -27,7 +27,7 @@ public class PlEnv {
     }
 
     private void init() {
-        browser = Playwright.create().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false).setArgs(List.of("--cors-exempt-headers")));
+        browser = Playwright.create().chromium().launch(new BrowserType.LaunchOptions().setHeadless(false));
         page = browser.newPage();
     }
 }

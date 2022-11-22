@@ -11,5 +11,6 @@ public class PlConfigurator {
     public void configure() {
         LayoutConfiguration.INSTANCE.setMethodsInjection(new PlMethodsInjectionImpl());
         LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new PlaywrightFrameworkBehavior());
+        LayoutConfiguration.INSTANCE.setTolerance(1);
     }
 }

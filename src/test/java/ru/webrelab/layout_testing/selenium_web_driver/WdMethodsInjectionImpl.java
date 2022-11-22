@@ -22,12 +22,6 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
     }
 
     @Override
-    public SizeRepository getSize(Object object) {
-        final Dimension dimension = ((WebElement) object).getSize();
-        return new SizeRepository(dimension.height, dimension.width);
-    }
-
-    @Override
     public Object executeJs(String js, Object... objects) {
         return ((RemoteWebDriver) WdEnv.INSTANCE.driver).executeScript(js, objects);
     }

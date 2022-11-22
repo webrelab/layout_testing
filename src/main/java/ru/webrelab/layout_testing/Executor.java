@@ -96,12 +96,12 @@ public class Executor {
             for (final IMeasuringType type : ds.getMeasureTypes()) {
                 final PageScanner scanner = new PageScanner(ds.getElementName(), container, ds.getElement(), type);
                 final LayoutCollection elementsByType = scanner.scan();
-                final ElementsTreeGenerator elementsTreeGenerator = new ElementsTreeGenerator(elementsByType);
-                elementsTreeGenerator.createTree();
-                elementsTreeGenerator.updateLayoutElements(elementsByType);
                 actualLayoutElements.putAll(elementsByType);
             }
         });
+        final ElementsTreeGenerator elementsTreeGenerator = new ElementsTreeGenerator(actualLayoutElements);
+        elementsTreeGenerator.createTree();
+        elementsTreeGenerator.updateLayoutElements();
         return actualLayoutElements;
     }
 }

@@ -1,6 +1,7 @@
 package ru.webrelab.layout_testing;
 
 import com.google.gson.Gson;
+import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.snippets.Snippet;
 import ru.webrelab.layout_testing.snippets.SnippetsRepository;
 
@@ -9,8 +10,10 @@ import java.util.stream.Collectors;
 
 public class ElementsTreeGenerator extends HashMap<String, Object> {
     private final Map<String, String> childToParentCleaned = new HashMap<>();
+    private final LayoutCollection layoutCollection;
 
     public ElementsTreeGenerator(final LayoutCollection layoutCollection) {
+        this.layoutCollection = layoutCollection;
         layoutCollection.forEach((uuid, el) -> put(uuid, el.getElement()));
     }
 
@@ -30,16 +33,16 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
                 return v;
             });
         }
-        final TreeFilter<String> filter = new TreeFilter<>(childToParentPairs);
+        final TreeFilter filter = new TreeFilter(childToParentPairs, layoutCollection);
         childToParentCleaned.putAll(filter.filter());
     }
 
-    public void updateLayoutElements(final LayoutCollection layoutElements) {
+    public void updateLayoutElements() {
         childToParentCleaned.forEach((child, parent) -> {
-            layoutElements.get(child).setParent(parent);
-            layoutElements.get(parent).addChild(child);
+            layoutCollection.get(child).setParent(parent);
+            layoutCollection.get(parent).addChild(child);
         });
-        checkWrongDependency(layoutElements);
+        checkWrongDependency(layoutCollection);
     }
 
     private void checkWrongDependency(final LayoutCollection layoutElements) {
@@ -50,17 +53,19 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
         }
     }
 
-    public static class TreeFilter<T> {
-        private final Map<T, List<T>> childToParentsMap;
+    public static class TreeFilter {
+        private final Map<String, List<String>> childToParentsMap;
+        private final LayoutCollection layoutCollection;
 
-        public TreeFilter(Map<T, List<T>> childToParentsMap) {
+        public TreeFilter(Map<String, List<String>> childToParentsMap, final LayoutCollection layoutCollection) {
+            this.layoutCollection = layoutCollection;
             this.childToParentsMap = childToParentsMap.entrySet()
                     .stream()
                     .collect(Collectors.toMap(Entry::getKey, e -> new ArrayList<>(e.getValue()), (a, b) -> b, HashMap::new));
         }
 
-        public Map<T, T> filter() {
-            final Map<T, T> map = new HashMap<>();
+        public Map<String, String> filter() {
+            final Map<String, String> map = new HashMap<>();
             while (!childToParentsMap.isEmpty()) {
                 childToParentsMap.entrySet()
                         .stream()
@@ -72,21 +77,38 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
                         .forEach(this::cleanParents);
                 int currentMapSize = childToParentsMap.size();
                 cleanChildren();
+                // Если не осталось записей с одним родителем, значит в списке есть
+                // элементы с множественными родителями. В этом случае родитель выбирается
+                // один по принципу - кто выше в списке enum IMeasuringType
                 if (currentMapSize == childToParentsMap.size()) {
-                    throw new LayoutTestingException("Children filter algorithm is working incorrect");
+                    final Set<String> parentsForRemoving = new HashSet<>();
+                    childToParentsMap.forEach((child, parents) -> {
+                        parentsForRemoving.addAll(parents);
+                        final String firstParent = parents
+                                .stream()
+                                .min((a, b) -> compareMeasuringTypes(layoutCollection.get(a).getType(), layoutCollection.get(b).getType()))
+                                .orElseThrow(() -> new LayoutTestingException("Parents list can't be empty"));
+                        map.put(child, firstParent);
+                    });
+                    parentsForRemoving.forEach(this::cleanParents);
+                    cleanChildren();
                 }
             }
             return map;
         }
 
+        private int compareMeasuringTypes(final IMeasuringType type1, final IMeasuringType type2) {
+            return ((Enum<?>) type1).ordinal() - ((Enum<?>) type2).ordinal();
+        }
+
         private void cleanChildren() {
-            for (final T child : new ArrayList<>(childToParentsMap.keySet())) {
+            for (final String child : new ArrayList<>(childToParentsMap.keySet())) {
                 if (childToParentsMap.get(child).isEmpty()) childToParentsMap.remove(child);
             }
         }
 
-        private void cleanParents(final T parent) {
-            for (final T child : childToParentsMap.keySet()) {
+        private void cleanParents(final String parent) {
+            for (final String child : childToParentsMap.keySet()) {
                 childToParentsMap.get(child).removeIf(parent::equals);
             }
         }
