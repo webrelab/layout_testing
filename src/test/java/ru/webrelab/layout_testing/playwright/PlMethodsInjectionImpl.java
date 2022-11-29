@@ -1,14 +1,22 @@
 package ru.webrelab.layout_testing.playwright;
 
 import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.Page;
 import com.microsoft.playwright.options.BoundingBox;
+import com.microsoft.playwright.options.ScreenshotType;
 import com.microsoft.playwright.options.ViewportSize;
+import ru.webrelab.layout_testing.LayoutElement;
 import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
+import ru.webrelab.layout_testing.utils.ScreenDraw;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,11 +88,28 @@ public class PlMethodsInjectionImpl implements IMethodsInjection {
     @Override
     public void actionAfterTestFailed(List<DifferenceReport> reports) {
         reports.stream().map(DifferenceReport::toString).forEach(System.out::println);
-        try {
-            Thread.sleep(35000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        reports.forEach(r -> {
+            if (r.isElementNotFound()) {
+                saveScreenshot(ScreenDraw.CssClass.EXPECTED, r.getExpected());
+            } else {
+                saveScreenshot(ScreenDraw.CssClass.ACTUAL, r.getActual());
+            }
+        });
         throw new LayoutTestingException("Layout errors detected");
+    }
+
+    private void saveScreenshot(final ScreenDraw.CssClass cssClass, final LayoutElement element) {
+        final String id = cssClass.name() + "-" + element.getType().toString() + "-" + element.getId();
+        final ElementHandle elementHandle = PlEnv.INSTANCE.getPage().querySelector(id);
+        elementHandle.scrollIntoViewIfNeeded();
+        final Path path = Paths.get("build", id + ".png");
+        final Page.ScreenshotOptions options = new Page.ScreenshotOptions();
+        options.path = path;
+        PlEnv.INSTANCE.getPage().screenshot(options);
+    }
+
+    @Override
+    public void actionAfterSnapshotCreated() {
+
     }
 }

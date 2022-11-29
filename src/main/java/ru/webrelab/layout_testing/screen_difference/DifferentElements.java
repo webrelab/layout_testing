@@ -1,10 +1,12 @@
 package ru.webrelab.layout_testing.screen_difference;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.function.Function;
 
 @RequiredArgsConstructor
+@Getter
 public class DifferentElements {
     private static Function<DifferentElements, String> formatter = a ->
             String.format(

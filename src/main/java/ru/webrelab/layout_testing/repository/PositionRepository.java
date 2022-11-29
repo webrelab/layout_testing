@@ -37,8 +37,8 @@ public class PositionRepository extends DimensionRepository {
      * @param left позиция от левой линии страницы
      */
     public PositionRepository(final PositionRepository container, final int top, final int left) {
-        this.top = top - container.top;
-        this.left = left - container.left;
+        this.top = container == null ? top : top - container.top;
+        this.left = container == null ? left : left - container.left;
         isAbsolute = false;
     }
 }

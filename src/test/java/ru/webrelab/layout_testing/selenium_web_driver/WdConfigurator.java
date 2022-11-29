@@ -8,13 +8,13 @@ import ru.webrelab.layout_testing.framework_based_behavior.SeleniumFrameworkBeha
 public class WdConfigurator {
     public void configure() {
         System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver_107");
-        LayoutConfiguration.INSTANCE.setMethodsInjection(new WdMethodsInjectionImpl());
-        LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new SeleniumFrameworkBehavior());
 
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--no-sandbox", "--disable-dev-shm-usage");
         chromeOptions.setAcceptInsecureCerts(true);
         WdEnv.INSTANCE.driver = new ChromeDriver(chromeOptions);
+        LayoutConfiguration.INSTANCE.setMethodsInjection(new WdMethodsInjectionImpl());
+        LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new SeleniumFrameworkBehavior());
         WdEnv.INSTANCE.driver.manage().window().maximize();
     }
 }

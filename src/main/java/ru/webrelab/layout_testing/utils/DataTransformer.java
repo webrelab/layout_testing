@@ -1,14 +1,12 @@
 package ru.webrelab.layout_testing.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import ru.webrelab.layout_testing.LayoutCollection;
 import ru.webrelab.layout_testing.LayoutElement;
 
 public class DataTransformer {
     public static String serialize(final LayoutCollection data) {
-        return new Gson().toJson(data.values());
+        return new GsonBuilder().disableHtmlEscaping().create().toJson(data.values());
     }
 
     public static LayoutCollection deserialize(final String json) {

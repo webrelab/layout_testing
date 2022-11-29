@@ -67,10 +67,11 @@ public class PageScanner {
 
     @SneakyThrows
     private LayoutElement createLayoutElement(final Object subElement, final IMeasuringType type) {
-
         final IRepository measuredData = type.getRepositoryClass().getConstructor(Object.class).newInstance(subElement);
         final SizeRepository size = measuredData.getSize(subElement);
-        if (size.isEmpty()) return null;
+        if (size.isEmpty()) {
+            return null;
+        }
         final PositionRepository position = measuredData.getPosition(container, subElement);
         final String transform = measuredData.getTransform(subElement);
         final String tagName = methods.getTagName(subElement).toLowerCase();

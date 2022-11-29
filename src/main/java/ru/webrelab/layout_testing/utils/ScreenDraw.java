@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.LayoutConfiguration;
 import ru.webrelab.layout_testing.LayoutElement;
+import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
 import ru.webrelab.layout_testing.snippets.Snippet;
@@ -16,7 +17,9 @@ public class ScreenDraw {
     private final PositionRepository container;
 
     public ScreenDraw(final PositionRepository container) {
-        this.container = container;
+        final IMethodsInjection methods = LayoutConfiguration.INSTANCE.getMethodsInjection();
+        final PositionRepository body = methods.getPosition(null, methods.findElementsByXpath("//body").get(0));
+        this.container = new PositionRepository(container.getTop() - body.getTop(), container.getLeft() - body.getLeft());
         createContainer();
     }
 
@@ -37,6 +40,7 @@ public class ScreenDraw {
         block.put("width", layoutElement.getSize().getWidth());
         block.put("color", cssClass.className);
         block.put("transform", layoutElement.getTransform());
+        block.put("id", cssClass.name() + "-" + layoutElement.getType().toString() + "-" + layoutElement.getId());
 
         LayoutConfiguration.INSTANCE
                 .getFrameworkBasedBehavior().jsExecutor(Snippet.GREED_DRAW, block);

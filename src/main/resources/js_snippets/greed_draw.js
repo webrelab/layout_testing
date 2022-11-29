@@ -1,6 +1,7 @@
 function handler(arg) {
     let div = document.createElement('div');
     div.classList.add(arg['color']);
+    div.id = arg['id'];
     div.style.cssText =
         'top:' + arg['top'] + 'px;' +
         'left:' + arg['left'] + 'px;' +

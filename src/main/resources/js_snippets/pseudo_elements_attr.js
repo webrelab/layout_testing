@@ -6,25 +6,32 @@ function handler(element) {
 }
 
 function collect(element, type) {
-    let rect = element.getClientRects();
     let elementStyles = window.getComputedStyle(element, null);
-    let attrStyles = window.getComputedStyle(element, type);
-    let elementTop = rect[0].top + window.scrollY - document.documentElement.clientTop;
-    let elementLeft = rect[0].left + window.scrollX - document.documentElement.clientLeft;
-    let mT = parseInt(attrStyles.marginTop, 10);
-    let mL = parseInt(attrStyles.marginLeft, 10);
-    let t = parseInt(attrStyles.top,10);
-    if (isNaN(t)) t = parseInt(elementStyles.paddingTop, 10);
-    let l = parseInt(attrStyles.left,10);
-    if (isNaN(l)) l = parseInt(elementStyles.paddingLeft, 10);
+    let pseudoElementStyles = window.getComputedStyle(element, type);
+    let mT = parseInt(pseudoElementStyles.marginTop);
+    let mL = parseInt(pseudoElementStyles.marginLeft);
+    let t = parseInt(pseudoElementStyles.top);
+    if (isNaN(t)) t = parseInt(elementStyles.paddingTop);
+    let l = parseInt(pseudoElementStyles.left);
+    if (isNaN(l)) l = parseInt(elementStyles.paddingLeft);
+    let height = pseudoElementStyles.height === 'auto' ?
+        parseInt(pseudoElementStyles.lineHeight)
+        : parseInt(pseudoElementStyles.height);
+    let width = pseudoElementStyles.width === 'auto' ?
+        parseInt(elementStyles.width)
+        - parseInt(elementStyles.paddingLeft)
+        - parseInt(elementStyles.paddingRight)
+        - mL
+        - parseInt(pseudoElementStyles.marginRight)
+        : parseInt(pseudoElementStyles.width);
     return {
-        content: attrStyles.content,
-        height: parseInt(attrStyles.height, 10),
-        width: parseInt(attrStyles.width, 10),
-        top: Math.round( t + mT + elementTop),
-        left: Math.round( l + mL + elementLeft),
-        background: attrStyles.background,
-        color: attrStyles.color,
-        transform: attrStyles.transform
+        content: pseudoElementStyles.content,
+        height: height,
+        width: width < 0 ? 0 : width,
+        topOffset: Math.round(t + mT),
+        leftOffset: Math.round(l + mL),
+        background: pseudoElementStyles.background,
+        color: pseudoElementStyles.color,
+        transform: pseudoElementStyles.transform
     }
 }

@@ -1,20 +1,30 @@
 package ru.webrelab.layout_testing.selenium_web_driver;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
+import com.microsoft.playwright.ElementHandle;
+import com.microsoft.playwright.Page;
+import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import ru.webrelab.layout_testing.LayoutElement;
 import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
+import ru.webrelab.layout_testing.playwright.PlEnv;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
+import ru.webrelab.layout_testing.utils.ScreenDraw;
 import ru.webrelab.layout_testing.utils.ScreenSizeUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class WdMethodsInjectionImpl implements IMethodsInjection {
+
+    private final WebDriver driver = WdEnv.INSTANCE.driver;
+
     @Override
     public PositionRepository getPosition(PositionRepository container, Object object) {
         final Point point = ((WebElement) object).getLocation();
@@ -23,7 +33,7 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
 
     @Override
     public Object executeJs(String js, Object... objects) {
-        return ((RemoteWebDriver) WdEnv.INSTANCE.driver).executeScript(js, objects);
+        return ((RemoteWebDriver) driver).executeScript(js, objects);
     }
 
     @Override
@@ -33,7 +43,7 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
 
     @Override
     public List<?> findElementsByXpath(String xpath) {
-        return WdEnv.INSTANCE.driver.findElements(By.xpath(xpath));
+        return driver.findElements(By.xpath(xpath));
     }
 
     @Override
@@ -58,14 +68,14 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
 
     @Override
     public SizeRepository getWindowSize() {
-        final Dimension dimension = WdEnv.INSTANCE.driver.manage().window().getSize();
+        final Dimension dimension = driver.manage().window().getSize();
         return new SizeRepository(dimension.height, dimension.width);
     }
 
 
     @Override
     public void setWindowSize(SizeRepository size) {
-        WdEnv.INSTANCE.driver.manage().window().setSize(new Dimension(size.getWidth(), size.getHeight()));
+        driver.manage().window().setSize(new Dimension(size.getWidth(), size.getHeight()));
     }
 
     @Override
@@ -75,12 +85,33 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
 
     @Override
     public void actionAfterTestFailed(List<DifferenceReport> reports) {
+        reports.forEach(System.out::println);
+        reports.forEach(r -> {
+            if (r.isElementNotFound()) {
+                saveScreenshot(ScreenDraw.CssClass.EXPECTED, r.getExpected());
+            } else {
+                saveScreenshot(ScreenDraw.CssClass.ACTUAL, r.getActual());
+            }
+        });
+        throw new LayoutTestingException("Layout errors detected");
+    }
+
+    private void saveScreenshot(final ScreenDraw.CssClass cssClass, final LayoutElement element) {
+        final String id = cssClass.name() + "-" + element.getType().toString() + "-" + element.getId();
+        final WebElement webElement = driver.findElement(By.id(id));
+        final Actions actions = new Actions(driver);
+        actions.scrollToElement(webElement).build().perform();
+        final byte[] bytes = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        final Path path = Paths.get("build", id + ".png");
         try {
-            Thread.sleep(15000);
-        } catch (InterruptedException e) {
+            Files.write(path, bytes);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        reports.forEach(System.out::println);
-        throw new LayoutTestingException("Layout errors detected");
+    }
+
+    @Override
+    public void actionAfterSnapshotCreated() {
+
     }
 }

@@ -59,9 +59,8 @@ public class Executor {
                 .filter(s -> !s.isEmpty())
                 .toArray(String[]::new);
         this.browserName = browserName;
-        final PositionRepository initialPosition = new PositionRepository(0, 0);
-        container = containerElement == null ? initialPosition :
-                methods.getPosition(initialPosition, containerElement);
+        container = containerElement == null ? methods.getPosition(null, methods.findElementsByXpath("//body").get(0)) :
+                methods.getPosition(null, containerElement);
         this.prepareFunction = prepareFunction;
     }
 
@@ -80,6 +79,7 @@ public class Executor {
                     currentScreenSize,
                     storagePath
             );
+            methods.actionAfterSnapshotCreated();
             return;
         }
         final LayoutCollection expectedLayoutElements = DataTransformer.deserialize(

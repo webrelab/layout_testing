@@ -26,19 +26,6 @@ public class SvgRepository extends AttributeRepository {
     public SvgRepository(final Object webElement) {
         final String fill = (String) ElementAttributesUtil.getStyles(webElement).get("fill");
         this.fill = fill == null ? "" : fill;
-        final List<?> useElements = methods
-                .findElementsByXpath(webElement, "descendant-or-self::*[name() = 'use']");
-        if (!useElements.isEmpty()) {
-            final String xref = methods.getAttributeValue(useElements.get(0), "xlink:href");
-            if (xref == null || xref.isEmpty()) return;
-            final String useId = xref.replace("#", "");
-            final List<?> shadowDomElements = methods.findElementsByXpath("//*[@id = '" + useId + "']");
-            if (shadowDomElements.isEmpty()) {
-                return;
-            }
-            updateVectors(shadowDomElements.get(0));
-            return;
-        }
         updateVectors(webElement);
     }
 

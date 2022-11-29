@@ -6,10 +6,7 @@ import ru.webrelab.layout_testing.ifaces.IRepository;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 
 abstract class Repository implements IRepository {
@@ -18,7 +15,7 @@ abstract class Repository implements IRepository {
     @Override
     public Map<String, Object> getFieldMap() {
         final Field[] fields = getClass().getDeclaredFields();
-        final Map<String, Object> map = new HashMap<>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         for (final Field field : fields) {
             field.setAccessible(true);
             if (Modifier.isTransient(field.getModifiers())) continue;

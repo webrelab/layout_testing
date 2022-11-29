@@ -101,4 +101,9 @@ public interface IMethodsInjection {
      * @param reports список объектов с ошибками
      */
     void actionAfterTestFailed(final List<DifferenceReport> reports);
+
+    /**
+     * Этот метод будет вызван после создания нового снапшота
+     */
+    void actionAfterSnapshotCreated();
 }

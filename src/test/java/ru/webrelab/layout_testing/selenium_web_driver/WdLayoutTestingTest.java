@@ -13,8 +13,11 @@ import ru.webrelab.layout_testing.Executor;
 import ru.webrelab.layout_testing.enums.MeasuringType;
 import ru.webrelab.layout_testing.enums.ScreenSize;
 import ru.webrelab.layout_testing.repository.RawDataSet;
+import ru.webrelab.layout_testing.utils.ReadWriteUtils;
 import ru.webrelab.layout_testing.utils.ScreenSizeUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,17 @@ public class WdLayoutTestingTest {
     private WebDriver driver;
 
     @BeforeEach
-    void before() {
+    void before() throws IOException {
+        Files.deleteIfExists(
+                ReadWriteUtils.getPath(
+                        "full_page",
+                        "CHROME",
+                        ScreenSize.FULL_HD,
+                        "sienna",
+                        "webdriver",
+                        "landing"
+                )
+        );
         new WdConfigurator().configure();
         driver = WdEnv.INSTANCE.driver;
     }
@@ -35,46 +48,45 @@ public class WdLayoutTestingTest {
 
     @Test
     public void testLargePage() throws InterruptedException {
-//        driver.get("https://les.media/articles/650884-chego-dobivaetsya-rodina");
-        driver.get("https://preview.cruip.com/solid/");
-        Thread.sleep(1000);
-        Actions actions = new Actions(driver);
-        actions.scrollToElement(driver.findElement(By.className("site-footer"))).build().perform();
-        actions.scrollByAmount(0, -10000).build().perform();
+        // create snapshot
+        driver.get("file:///home/user/Downloads/sienna/index.html");
+        ScreenSizeUtils.setWindowSize(ScreenSize.FULL_HD);
+        driver.findElement(By.className("accordion-icon")).click();
+        Thread.sleep(200);
         WebElement container = driver.findElement(By.tagName("body"));
         final List<RawDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(new RawDataSet("All page", container,
+        dataSetList.add(new RawDataSet(
+                "All page",
+                container,
                 MeasuringType.ALL
         ));
-//        dataSetList.add(new RawDataSet("Follow us block", container.findElement(By.className("social-footer")), MeasuringType.ALL.name()));
-
-        ScreenSizeUtils.setWindowSize(ScreenSize.FULL_HD);
-        final Executor executorDesktop = new Executor(
+        Executor executorDesktop = new Executor(
                 dataSetList,
                 "full_page",
-                "cruip; landing",
+                "sienna; webdriver; landing",
                 "CHROME",
                 container
         );
         executorDesktop.execute();
 
-        Thread.sleep(10000);
-
-    }
-
-    @Test
-    void svgElements() {
-        driver.get("https://les.media/articles/650884-chego-dobivaetsya-rodina");
-        WebElement container = driver.findElement(By.xpath("//body"));
-        final List<RawDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(new RawDataSet("Full page", container, MeasuringType.SVG.name()));
-
-        ScreenSizeUtils.setWindowSize(ScreenSize.DESKTOP);
-        final Executor executorDesktop = new Executor(
+        // check snapshot
+        driver.navigate().refresh();
+        new Actions(driver).scrollByAmount(0, -10000).build().perform();
+        driver.findElement(By.className("accordion-icon")).click();
+        new Actions(driver).scrollByAmount(0, -10000).build().perform();
+        container = driver.findElement(By.tagName("body"));
+        dataSetList.clear();
+        dataSetList.add(new RawDataSet(
+                "All page",
+                container,
+                MeasuringType.ALL
+        ));
+        executorDesktop = new Executor(
                 dataSetList,
-                "svg_testing",
-                "articles; long",
-                "CHROME", container
+                "full_page",
+                "sienna; webdriver; landing",
+                "CHROME",
+                container
         );
         executorDesktop.execute();
     }

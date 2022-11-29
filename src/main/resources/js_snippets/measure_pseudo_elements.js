@@ -1,14 +1,16 @@
-function handler(node) {
-    if (node === null || node === undefined) node = document.body;
+function handler(arg) {
+    walker(document.body);
+}
+
+function walker(node) {
     [...node.children].forEach(e => {
         try {
+            if (window.getComputedStyle(e).display === 'none') return;
             let after = window.getComputedStyle(e, ':after')
             if (
                 after.getPropertyValue('content') !== 'none' &&
                 after.getPropertyValue('height') !== '0px' &&
-                after.getPropertyValue('width') !== '0px' &&
-                after.getPropertyValue('height') !== 'auto' &&
-                after.getPropertyValue('width') !== 'auto'
+                after.getPropertyValue('width') !== '0px'
             ) {
                 e.classList.add('measuringAfterElement');
             }
@@ -16,14 +18,12 @@ function handler(node) {
             if (
                 before.getPropertyValue('content') !== 'none' &&
                 before.getPropertyValue('height') !== '0px' &&
-                before.getPropertyValue('width') !== '0px' &&
-                before.getPropertyValue('height') !== 'auto' &&
-                before.getPropertyValue('width') !== 'auto'
+                before.getPropertyValue('width') !== '0px'
             )  {
                 e.classList.add('measuringBeforeElement');
             }
         } catch (f) {
         }
-        handler(e);
+        walker(e);
     })
 }

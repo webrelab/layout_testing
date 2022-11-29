@@ -2,15 +2,17 @@ package ru.webrelab.layout_testing.playwright;
 
 import com.microsoft.playwright.ElementHandle;
 import com.microsoft.playwright.Page;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.webrelab.layout_testing.Executor;
 import ru.webrelab.layout_testing.enums.MeasuringType;
 import ru.webrelab.layout_testing.enums.ScreenSize;
 import ru.webrelab.layout_testing.repository.RawDataSet;
+import ru.webrelab.layout_testing.utils.ReadWriteUtils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,27 +20,70 @@ public class PlLayoutTestingTest {
     private Page page;
 
     @BeforeEach
-    void before() {
+    void before() throws IOException {
+        Files.deleteIfExists(
+                ReadWriteUtils.getPath(
+                        "full_page",
+                        "CHROME",
+                        ScreenSize.FULL_HD,
+                        "sienna",
+                        "playwright",
+                        "landing"
+                )
+        );
         new PlConfigurator().configure();
         page = PlEnv.INSTANCE.getPage();
     }
 
+    @AfterEach
+    void after() {
+        page.close();
+        PlEnv.INSTANCE.getBrowser().close();
+    }
+
     @Test
     void testLargePage() throws InterruptedException {
-        page.navigate("https://preview.cruip.com/solid/");
-        Thread.sleep(2000);
+        page.navigate("file:///home/user/Downloads/sienna/index.html");
         page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight());
+        page.querySelector(".testimonials-wrap").scrollIntoViewIfNeeded();
+        Thread.sleep(200);
+        page.querySelector(".accordion-icon").click();
+//        page.querySelector(".site-header").scrollIntoViewIfNeeded();
         ElementHandle container = page.querySelector("//body");
         final List<RawDataSet> dataSetList = new ArrayList<>();
-        dataSetList.add(new RawDataSet("All page", container,
+        dataSetList.add(new RawDataSet(
+                "All page",
+                container,
+//                MeasuringType.PSEUDO_BEFORE,
                 MeasuringType.ALL
         ));
-//        dataSetList.add(new RawDataSet("Follow us block", container.querySelector(".social-footer"), MeasuringType.ALL.name()));
 
-        final Executor executorDesktop = new Executor(
+        Executor executorDesktop = new Executor(
                 dataSetList,
                 "full_page",
-                "cruip; landing",
+                "sienna; playwright; landing",
+                "CHROME",
+                container
+        );
+        executorDesktop.execute();
+
+        page.reload();
+        page.querySelector(".site-header").scrollIntoViewIfNeeded();
+        page.querySelector(".testimonials-wrap").scrollIntoViewIfNeeded();
+        Thread.sleep(200);
+        page.querySelector(".accordion-icon").click();
+        page.querySelector(".site-header").scrollIntoViewIfNeeded();
+        container = page.querySelector("//body");
+        dataSetList.clear();
+        dataSetList.add(new RawDataSet(
+                "All page",
+                container,
+                MeasuringType.ALL
+        ));
+        executorDesktop = new Executor(
+                dataSetList,
+                "full_page",
+                "sienna; playwright; landing",
                 "CHROME",
                 container
         );

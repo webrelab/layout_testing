@@ -11,21 +11,25 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Getter
 public abstract class PseudoElementsRepository extends AttributeRepository {
-    private final Map<String, Object> data = new HashMap<>();
+    private transient final Map<String, Object> data = new HashMap<>();
 
     @SuppressWarnings("unchecked")
     public PseudoElementsRepository(final Object webElement, final String type) {
-        final Map<String, Map<String, Object>> styles = (Map<String, Map<String, Object>>) LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior()
-                .jsExecutor(Snippet.PSEUDO_ELEMENTS_ATTR, webElement);
-        data.putAll(styles.get(type));
+        try {
+            final Map<String, Map<String, Object>> styles = (Map<String, Map<String, Object>>) LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior()
+                    .jsExecutor(Snippet.PSEUDO_ELEMENTS_ATTR, webElement);
+            data.putAll(styles.get(type));
+        } catch (Throwable e) {
+            System.out.println(type);
+        }
     }
 
     @Override
     public PositionRepository getPosition(PositionRepository container, Object webElement) {
-        int top = ((Number) data.get("top")).intValue();
-        int left = ((Number) data.get("left")).intValue();
+        final PositionRepository elementPosition = LayoutConfiguration.INSTANCE.getMethodsInjection().getPosition(container, webElement);
+        int top = ((Number) data.get("topOffset")).intValue() + elementPosition.getTop();
+        int left = ((Number) data.get("leftOffset")).intValue() + elementPosition.getLeft();
         return new PositionRepository(
-                container,
                 top,
                 left
         );
@@ -40,7 +44,9 @@ public abstract class PseudoElementsRepository extends AttributeRepository {
 
     @Override
     public boolean check() {
-        return !data.get("content").equals("none");
+        return !data.get("content").equals("none")
+                && ((Number) data.get("height")).intValue() != 0
+                && ((Number) data.get("width")).intValue() != 0;
     }
 
     @Override
