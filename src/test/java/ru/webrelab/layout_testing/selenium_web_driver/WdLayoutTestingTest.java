@@ -49,7 +49,7 @@ public class WdLayoutTestingTest {
     @Test
     public void testLargePage() throws InterruptedException {
         // create snapshot
-        driver.get("file:///home/user/Downloads/sienna/index.html");
+        driver.get("file://" + System.getProperty("user.dir") + "/src/test/resources/data/html/sienna/index.html");
         ScreenSizeUtils.setWindowSize(ScreenSize.FULL_HD);
         driver.findElement(By.className("accordion-icon")).click();
         Thread.sleep(200);

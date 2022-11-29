@@ -43,7 +43,7 @@ public class PlLayoutTestingTest {
 
     @Test
     void testLargePage() throws InterruptedException {
-        page.navigate("file:///home/user/Downloads/sienna/index.html");
+        page.navigate("file://" + System.getProperty("user.dir") + "/src/test/resources/data/html/sienna/index.html");
         page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight());
         page.querySelector(".testimonials-wrap").scrollIntoViewIfNeeded();
         Thread.sleep(200);
