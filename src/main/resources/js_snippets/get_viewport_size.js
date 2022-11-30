@@ -1,4 +1,4 @@
-function handler(arg) {
+function handler() {
    return  {
       height: window.innerHeight,
       width: window.innerWidth

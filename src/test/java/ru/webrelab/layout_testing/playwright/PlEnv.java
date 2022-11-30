@@ -5,8 +5,6 @@ import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
 
-import java.util.List;
-
 public class PlEnv {
     public static final PlEnv INSTANCE = new PlEnv();
     private Browser browser;

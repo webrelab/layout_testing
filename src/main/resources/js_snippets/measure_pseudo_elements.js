@@ -1,4 +1,4 @@
-function handler(arg) {
+function handler() {
     walker(document.body);
 }
 

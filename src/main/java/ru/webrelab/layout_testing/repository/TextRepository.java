@@ -1,14 +1,12 @@
 package ru.webrelab.layout_testing.repository;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.LayoutConfiguration;
 import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.util.Map;
 import java.util.Objects;
 
-@RequiredArgsConstructor
 @Getter
 public class TextRepository extends AttributeRepository {
     private final String fontFamily;

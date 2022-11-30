@@ -1,14 +1,12 @@
 package ru.webrelab.layout_testing.repository;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.LayoutConfiguration;
 import ru.webrelab.layout_testing.snippets.Snippet;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Getter
 public abstract class PseudoElementsRepository extends AttributeRepository {
     private transient final Map<String, Object> data = new HashMap<>();

@@ -1,14 +1,12 @@
 package ru.webrelab.layout_testing.repository;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import ru.webrelab.layout_testing.utils.ElementAttributesUtil;
 
 import java.net.URI;
 
 @Getter
-@RequiredArgsConstructor
 public class ImageRepository extends AttributeRepository {
     /**
      * Поле хранит значение src тега img
@@ -24,6 +22,7 @@ public class ImageRepository extends AttributeRepository {
         src = (srcAttr.startsWith("http://") || srcAttr.startsWith("https://")) ?
                 new URI(srcAttr).getPath() :
                 srcAttr;
+
     }
 
     @Override

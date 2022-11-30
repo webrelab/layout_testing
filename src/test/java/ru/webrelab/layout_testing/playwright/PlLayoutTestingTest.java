@@ -42,7 +42,7 @@ public class PlLayoutTestingTest {
     }
 
     @Test
-    void testLargePage() throws InterruptedException {
+    void testLargePage() {
         page.navigate("file://" + System.getProperty("user.dir") + "/src/test/resources/data/html/sienna/index.html");
         page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight());
         page.querySelector(".accordion-icon").click();

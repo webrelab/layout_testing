@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SnippetsRepository {
     public static final SnippetsRepository INSTANCE = new SnippetsRepository();

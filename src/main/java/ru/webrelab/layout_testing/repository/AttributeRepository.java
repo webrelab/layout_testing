@@ -9,11 +9,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public abstract class AttributeRepository extends Repository {
-    public AttributeRepository(final Object object) {
-    }
-
-    public AttributeRepository(final Object... objects) {
-    }
 
     @Override
     public List<DifferentElements> compareWith(IRepository expected) {

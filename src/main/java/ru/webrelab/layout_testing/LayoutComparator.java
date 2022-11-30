@@ -5,7 +5,6 @@ import ru.webrelab.layout_testing.screen_difference.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 public class LayoutComparator {

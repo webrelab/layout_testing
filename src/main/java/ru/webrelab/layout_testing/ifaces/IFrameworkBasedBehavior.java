@@ -1,6 +1,5 @@
 package ru.webrelab.layout_testing.ifaces;
 
-import ru.webrelab.layout_testing.LayoutConfiguration;
 import ru.webrelab.layout_testing.repository.SizeRepository;
 import ru.webrelab.layout_testing.snippets.Snippet;
 import ru.webrelab.layout_testing.snippets.SnippetsRepository;

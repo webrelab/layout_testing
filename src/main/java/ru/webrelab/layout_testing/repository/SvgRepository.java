@@ -18,11 +18,6 @@ public class SvgRepository extends AttributeRepository {
     private final String fill;
     private final List<Map<String, Object>> vectors = new ArrayList<>();
 
-    public SvgRepository(final String fill, final List<Map<String, Object>> vectors) {
-        this.fill = fill;
-        this.vectors.addAll(vectors);
-    }
-
     public SvgRepository(final Object webElement) {
         final String fill = (String) ElementAttributesUtil.getStyles(webElement).get("fill");
         this.fill = fill == null ? "" : fill;

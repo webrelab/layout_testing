@@ -3,7 +3,6 @@ package ru.webrelab.layout_testing;
 import com.google.gson.Gson;
 import ru.webrelab.layout_testing.ifaces.IMeasuringType;
 import ru.webrelab.layout_testing.snippets.Snippet;
-import ru.webrelab.layout_testing.snippets.SnippetsRepository;
 
 import java.util.*;
 import java.util.stream.Collectors;

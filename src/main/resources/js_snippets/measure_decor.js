@@ -1,4 +1,4 @@
-function handler(arg) {
+function handler() {
     let nodes = ['div', 'a', 'p', 'button', 'span', 'section', 'aside', 'input', 'textarea'];
     nodes.forEach(node => {
         [...document.body.getElementsByTagName(node)]
