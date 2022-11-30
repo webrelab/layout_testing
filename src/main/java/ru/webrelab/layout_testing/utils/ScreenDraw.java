@@ -60,12 +60,12 @@ public class ScreenDraw {
                                 "color", type.getColor()
                         )));
         params.add(Map.of(
-                "type", "actual",
+                "type", DataState.ACTUAL.toString(),
                 "deg", 45,
                 "color", LayoutConfiguration.INSTANCE.getActualElementColor()
         ));
         params.add(Map.of(
-                "type", "expected",
+                "type", DataState.EXPECTED.toString(),
                 "deg", -45,
                 "color", LayoutConfiguration.INSTANCE.getExpectedElementColor()
         ));
