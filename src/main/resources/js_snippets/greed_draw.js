@@ -1,6 +1,6 @@
 function handler(arg) {
     let div = document.createElement('div');
-    div.classList.add(arg['color']);
+    div.classList.add(arg['className'] + "_grid");
     div.id = arg['id'];
     div.style.cssText =
         'top:' + arg['top'] + 'px;' +

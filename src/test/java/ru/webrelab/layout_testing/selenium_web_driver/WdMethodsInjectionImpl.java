@@ -1,14 +1,11 @@
 package ru.webrelab.layout_testing.selenium_web_driver;
 
-import com.microsoft.playwright.ElementHandle;
-import com.microsoft.playwright.Page;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import ru.webrelab.layout_testing.LayoutElement;
 import ru.webrelab.layout_testing.LayoutTestingException;
 import ru.webrelab.layout_testing.ifaces.IMethodsInjection;
-import ru.webrelab.layout_testing.playwright.PlEnv;
 import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.repository.SizeRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
@@ -88,16 +85,16 @@ public class WdMethodsInjectionImpl implements IMethodsInjection {
         reports.forEach(System.out::println);
         reports.forEach(r -> {
             if (r.isElementNotFound()) {
-                saveScreenshot(ScreenDraw.CssClass.EXPECTED, r.getExpected());
+                saveScreenshot(ScreenDraw.DataState.EXPECTED, r.getExpected());
             } else {
-                saveScreenshot(ScreenDraw.CssClass.ACTUAL, r.getActual());
+                saveScreenshot(ScreenDraw.DataState.ACTUAL, r.getActual());
             }
         });
         throw new LayoutTestingException("Layout errors detected");
     }
 
-    private void saveScreenshot(final ScreenDraw.CssClass cssClass, final LayoutElement element) {
-        final String id = cssClass.name() + "-" + element.getType().toString() + "-" + element.getId();
+    private void saveScreenshot(final ScreenDraw.DataState dataState, final LayoutElement element) {
+        final String id = dataState.name() + "-" + element.getType().toString() + "-" + element.getId();
         final WebElement webElement = driver.findElement(By.id(id));
         final Actions actions = new Actions(driver);
         actions.scrollToElement(webElement).build().perform();

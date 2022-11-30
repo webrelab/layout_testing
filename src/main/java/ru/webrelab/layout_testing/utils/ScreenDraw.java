@@ -9,9 +9,11 @@ import ru.webrelab.layout_testing.repository.PositionRepository;
 import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
 import ru.webrelab.layout_testing.snippets.Snippet;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class ScreenDraw {
     private final PositionRepository container;
@@ -28,40 +30,55 @@ public class ScreenDraw {
     }
 
     private void draw(final DifferenceReport report) {
-        if (report.getActual() != null) draw(CssClass.ACTUAL, report.getActual());
-        if (report.getExpected() != null) draw(CssClass.EXPECTED, report.getExpected());
+        if (report.getActual() != null) draw(DataState.ACTUAL, report.getActual());
+        if (report.getExpected() != null) draw(DataState.EXPECTED, report.getExpected());
     }
 
-    public void draw(final CssClass cssClass, final LayoutElement layoutElement) {
+    public void draw(final DataState dataState, final LayoutElement layoutElement) {
         final Map<String, Object> block = new HashMap<>();
         block.put("top", layoutElement.getPosition().getTop() + container.getTop());
         block.put("left", layoutElement.getPosition().getLeft() + container.getLeft());
         block.put("height", layoutElement.getSize().getHeight());
         block.put("width", layoutElement.getSize().getWidth());
-        block.put("color", cssClass.className);
+        block.put("className", dataState == null ? layoutElement.getType().toString(): dataState.name());
         block.put("transform", layoutElement.getTransform());
-        block.put("id", cssClass.name() + "-" + layoutElement.getType().toString() + "-" + layoutElement.getId());
+        final String elementId;
+        if (dataState == null) elementId = layoutElement.getType().toString() + "-" + layoutElement.getId();
+        else elementId = dataState + "-" + layoutElement.getType().toString() + "-" + layoutElement.getId();
+        block.put("id", elementId);
 
         LayoutConfiguration.INSTANCE
                 .getFrameworkBasedBehavior().jsExecutor(Snippet.GREED_DRAW, block);
     }
 
     private void createContainer() {
+        final List<Map<String, Object>> params = new ArrayList<>();
+        Stream.of(LayoutConfiguration.INSTANCE.getDefaultMeasuringTypeEnum().getEnumConstants())
+                        .forEach(type -> params.add(Map.of(
+                                "type", type.toString(),
+                                "deg", type.getDeg(),
+                                "color", type.getColor()
+                        )));
+        params.add(Map.of(
+                "type", "actual",
+                "deg", 45,
+                "color", LayoutConfiguration.INSTANCE.getActualElementColor()
+        ));
+        params.add(Map.of(
+                "type", "expected",
+                "deg", -45,
+                "color", LayoutConfiguration.INSTANCE.getExpectedElementColor()
+        ));
         LayoutConfiguration.INSTANCE.getFrameworkBasedBehavior().jsExecutor(
-                Map.of(
-                        "ACTUAL_COLOR_VALUE", LayoutConfiguration.INSTANCE.getActualElementColor(),
-                        "EXPECTED_COLOR_VALUE", LayoutConfiguration.INSTANCE.getExpectedElementColor()
-                ),
                 Snippet.CREATE_CONTAINER,
-                null
+                params
         );
     }
 
     @RequiredArgsConstructor
     @Getter
-    public enum CssClass {
-        ACTUAL("actual_grid"),
-        EXPECTED("expected_grid");
-        private final String className;
+    public enum DataState {
+        ACTUAL,
+        EXPECTED
     }
 }

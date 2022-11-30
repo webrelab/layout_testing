@@ -45,10 +45,7 @@ public class PlLayoutTestingTest {
     void testLargePage() throws InterruptedException {
         page.navigate("file://" + System.getProperty("user.dir") + "/src/test/resources/data/html/sienna/index.html");
         page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight());
-        page.querySelector(".testimonials-wrap").scrollIntoViewIfNeeded();
-        Thread.sleep(200);
         page.querySelector(".accordion-icon").click();
-//        page.querySelector(".site-header").scrollIntoViewIfNeeded();
         ElementHandle container = page.querySelector("//body");
         final List<RawDataSet> dataSetList = new ArrayList<>();
         dataSetList.add(new RawDataSet(
@@ -68,9 +65,6 @@ public class PlLayoutTestingTest {
         executorDesktop.execute();
 
         page.reload();
-        page.querySelector(".site-header").scrollIntoViewIfNeeded();
-        page.querySelector(".testimonials-wrap").scrollIntoViewIfNeeded();
-        Thread.sleep(200);
         page.querySelector(".accordion-icon").click();
         page.querySelector(".site-header").scrollIntoViewIfNeeded();
         container = page.querySelector("//body");

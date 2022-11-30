@@ -71,7 +71,7 @@ public class Executor {
 
         if (!ReadWriteUtils.isFileExist(measureScenarioName, browserName, currentScreenSize, storagePath)) {
             final ScreenDraw screenDraw = new ScreenDraw(container);
-            actualLayoutElements.forEach((k, v) -> screenDraw.draw(ScreenDraw.CssClass.EXPECTED, v));
+            actualLayoutElements.forEach((k, v) -> screenDraw.draw(null, v));
             ReadWriteUtils.write(
                     DataTransformer.serialize(actualLayoutElements),
                     measureScenarioName,

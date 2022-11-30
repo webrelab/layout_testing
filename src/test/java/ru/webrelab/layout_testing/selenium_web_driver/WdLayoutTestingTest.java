@@ -71,7 +71,6 @@ public class WdLayoutTestingTest {
 
         // check snapshot
         driver.navigate().refresh();
-        new Actions(driver).scrollByAmount(0, -10000).build().perform();
         driver.findElement(By.className("accordion-icon")).click();
         new Actions(driver).scrollByAmount(0, -10000).build().perform();
         container = driver.findElement(By.tagName("body"));
