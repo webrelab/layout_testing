@@ -9,10 +9,9 @@ import java.net.URI;
 @Getter
 public class ImageRepository extends AttributeRepository {
     /**
-     * Поле хранит значение src тега img
-     * Если в src хранится base64 картинка, то сохраняем в такм же виде.
-     * Если ссылка на картинку - сохраняем только относительный путь без хоста
-     * чтобы избежать проблему с тестированием на тестовых стендах с разными доменами
+     * The field stores the src value of the img tag. If the base64 image is stored in src, then we
+     * save it in the same form. If the link is to an image - save only the relative path without
+     * the host to avoid the problem of testing on test benches with different domains
      */
     private final String src;
 

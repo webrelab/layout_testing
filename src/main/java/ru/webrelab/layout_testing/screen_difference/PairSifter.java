@@ -8,10 +8,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * Класс выполняет просеивание пар элементов (полученные с экрана и из снэпшота)
- * итеративно вытесняя сначала явно различные и идентичные элементы, затем идентичные
- * по атрибутам и имеющие допустимые отклонения по позиции и размеру. Из оставшихся
- * выполняется сопоставление по позициям или атрибутам и вычисляются ошибки.
+ * The class performs a sifting of pairs of elements (obtained from the screen and from the snapshot),
+ * iteratively displacing first clearly different and identical elements, then identical in attributes
+ * and with allowable deviations in position and size. Of the remaining ones, matching is performed
+ * by position or attribute and errors are calculated.
  */
 public class PairSifter {
     private final PairCollection pairElements;

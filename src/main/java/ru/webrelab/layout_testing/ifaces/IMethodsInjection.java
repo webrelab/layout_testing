@@ -7,103 +7,98 @@ import ru.webrelab.layout_testing.screen_difference.DifferenceReport;
 import java.util.List;
 
 /**
- * Интерфейс предоставляет возможность использовать компонент тестирования верстки
- * на своём фреймворке, вне зависимости от используемой технологии доступа к браузеру
+ * The interface provides the ability to use the layout testing component on your own framework,
+ * regardless of the browser access technology used
  */
 public interface IMethodsInjection {
 
     /**
-     * Метод требуется для получения текущей позиции элемента относительно
-     * позиции контейнера
-     * @param container объект PositionRepository с координатами контейнера, от которого должно
-     *                  вычисляться положение веб-элемента
-     * @param object веб-элемент
-     * @return объект PositionRepository с текущими координатами элемента относительно контейнера
+     * The method is required to get the current position of the element relative to the position of the container
+     * @param container the PositionRepository object with the coordinates of the container from which the
+     *                  position of the web element should be calculated
+     * @param object web element
+     * @return a PositionRepository object with the element's current coordinates relative to the container
      */
     PositionRepository getPosition(PositionRepository container, Object object);
 
     /**
-     * Метод требуется для исполнения Javascript кода на тестируемой странице.
-     * @param js текст скрипта
-     * @param objects список объектов, которые должны быть переданы в скрипт
-     * @return результат выполнения скрипта
+     * The method is required to execute Javascript code on the page being tested.
+     * @param js script text
+     * @param objects list of objects to be passed to the script
+     * @return script execution result
      */
     Object executeJs(String js, Object... objects);
 
     /**
-     * Метод требуется для получения списка веб-элемент по xpath, находящихся
-     * внутри переданного веб-элемента
-     * @param object веб-элемент внутри которого производится поиск
-     * @param xpath xpath для поиска
-     * @return список найденных веб-элементов (может быть пустым)
+     * The method is required to get a list of web elements by xpath that are inside the passed web element
+     * @param object web element within which to search
+     * @param xpath xpath to search
+     * @return list of found web elements (may be empty)
      */
     List<?> findElementsByXpath(Object object, String xpath);
 
     /**
-     * Метод требуется для получения списка веб-элемент по xpath, находящихся
-     * на странице без привязки к другим элементам
-     * @param xpath xpath для поиска
-     * @return список найденных веб-элементов (может быть пустым)
+     * The method is required to get a list of web elements by xpath located on the page without reference to other elements
+     * @param xpath xpath to search
+     * @return list of found web elements (may be empty)
      */
     List<?> findElementsByXpath(String xpath);
 
     /**
-     * Метод требуется для получения текста из элемента
-     * @param object веб-элемент
-     * @return текст, полученный из веб-элемента
+     * The method is required to get the text from the element
+     * @param object web element
+     * @return text retrieved from the web element
      */
     String getText(Object object);
 
     /**
-     * Метод требуется для получения имени тега переданного в него элемента приложения
-     * @param object веб-элемент
-     * @return имя тега переданного элемента
+     * The method is required to get the name of the tag of the application element passed to it
+     * @param object web element
+     * @return tag name of passed element
      */
     String getTagName(Object object);
 
     /**
-     * Метод требуется для получения значения атрибута веб-элемента
-     * @param webElement веб-элемент
-     * @param attribute название атрибута
-     * @return значение атрибута
+     * The method is required to get the value of an attribute of a web element
+     * @param webElement web element
+     * @param attribute attribute name
+     * @return attribute value
      */
     String getAttributeValue(Object webElement, String attribute);
 
     /**
-     * Метод требуется для получения текущего размера вьюпорта (для браузера это
-     * размер body)
-     * @return объект SizeRepository с текущими размерами вьюпорта
+     * The method is required to get the current size of the viewport (for the browser, this is the size of the body)
+     * @return SizeRepository object with current viewport sizes
      */
     SizeRepository getWindowBodySize();
 
     /**
-     * Метод требуется для получения текущего размера окна приложения
-     * @return объект SizeRepository с текущими размерами окна
+     * The method is required to get the current size of the application window
+     * @return a SizeRepository object with the current dimensions of the window
      */
     SizeRepository getWindowSize();
 
     /**
-     * Метод требуется для установки окна приложения заданного размера
-     * @param size объект SizeRepository с заданными размерами окна
+     * The method is required to set the application window to a given size
+     * @param size a SizeRepository object with the specified window sizes
      */
     void setWindowSize(SizeRepository size);
 
     /**
-     * Этот метод будет вызван перед началом тестирования верстки. В нём можно реализовать
-     * любые дополнительные подготовительные действия. Например выполнить JS код для подготовки страницы.
+     * This method will be called before layout testing starts. In it, you can implement any additional
+     * preparatory actions. For example, execute JS code to prepare the page.
      */
     void actionsBeforeTesting();
 
     /**
-     * Этот метод будет вызван в том случае, если при тестировании
-     * верстки были выявлены ошибки. В метод передаётся список объектов,
-     * содержащих ошибки
-     * @param reports список объектов с ошибками
+     * This method will be called if errors were found during layout testing.
+     * The list of objects containing errors is passed to the method
+     * @param reports list of objects with errors
      */
     void actionAfterTestFailed(final List<DifferenceReport> reports);
 
     /**
-     * Этот метод будет вызван после создания нового снапшота
+     * This method will be called after creating a new snapshot
      */
     void actionAfterSnapshotCreated();
 }

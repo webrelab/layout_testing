@@ -83,7 +83,7 @@ The file will be written to src/test/resources/data/layouts/CHROME/DESKTOP/path/
 according to the data from the example above.\
 When restarted, the data received from the screen will be compared with those that were previously written to the json file.
 
-#### Доступные варианты проверок
+#### Available test options
 
 | Check Type    | Description                                                                                                                                                                  |
 |---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|

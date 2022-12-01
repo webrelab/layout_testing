@@ -47,7 +47,7 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
     private void checkWrongDependency(final LayoutCollection layoutElements) {
         for (final LayoutElement e : layoutElements.values()) {
             if (e.getChildren().contains(e.getParent())) {
-                throw new LayoutTestingException("Обнаружен элемент с одинаковым parent и children:\n" + new Gson().toJson(e));
+                throw new LayoutTestingException("Element found with same parent and children:\n" + new Gson().toJson(e));
             }
         }
     }
@@ -76,9 +76,8 @@ public class ElementsTreeGenerator extends HashMap<String, Object> {
                         .forEach(this::cleanParents);
                 int currentMapSize = childToParentsMap.size();
                 cleanChildren();
-                // Если не осталось записей с одним родителем, значит в списке есть
-                // элементы с множественными родителями. В этом случае родитель выбирается
-                // один по принципу - кто выше в списке enum IMeasuringType
+                // If there are no single-parent records left, then the list contains elements with multiple parents.
+                // In this case, one parent is selected according to the principle - who is higher in the enum IMeasuringType list
                 if (currentMapSize == childToParentsMap.size()) {
                     final Set<String> parentsForRemoving = new HashSet<>();
                     childToParentsMap.forEach((child, parents) -> {

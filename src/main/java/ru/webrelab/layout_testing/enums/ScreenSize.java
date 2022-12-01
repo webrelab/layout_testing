@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import ru.webrelab.layout_testing.ifaces.IScreenSize;
 
 /**
- * Список доступных разрешений для выполнения тестов на вёрстку
+ * List of available permissions to run layout tests
  */
 @RequiredArgsConstructor
 @Getter

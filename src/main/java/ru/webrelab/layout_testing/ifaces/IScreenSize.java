@@ -1,21 +1,21 @@
 package ru.webrelab.layout_testing.ifaces;
 
 /**
- * Интерфес для реализации enum с фиксированными размерами экрана размерами экрана
+ * Interface for implementing enum with fixed screen sizes
  */
 public interface IScreenSize {
     /**
-     * @return человекочитаемое название размера экрана для вывода в логах
+     * @return human-readable screen size name to display in logs
      */
     String getDescription();
 
     /**
-     * @return ширина вьюпорта (не окна браузера, а например тега body для веб-приложения)
+     * @return viewport width (not the browser window, but for example the body tag for a web application)
      */
     int getWidth();
 
     /**
-     * @return высота вьюпорта (не окна браузера, а например тега body для веб-приложения)
+     * @return viewport height (not the browser window, but for example the body tag for a web application)
      */
     int getHeight();
 }

@@ -9,19 +9,19 @@ public class PositionRepository extends DimensionRepository {
     private transient final boolean isAbsolute;
 
     /**
-     * Конструктор для задания абсолютной позиции элемента
-     * @param top позиция от верхней линии страницы
-     * @param left позиция от левой линии страницы
+     * Constructor for setting the absolute position of an element
+     * @param top position from the top of the page
+     * @param left position from left page line
      */
     public PositionRepository(int top, int left) {
         this(top, left, true);
     }
 
     /**
-     * Конструктор для задания позиции с указанием того, относительная она или абсолютная
-     * @param top вертикальная позиция
-     * @param left горизонтальная позиция
-     * @param isAbsolute true если указанная позиция абсолютная (от верхней левой точки страницы)
+     * Constructor for specifying a position indicating whether it is relative or absolute
+     * @param top vertical position
+     * @param left horizontal position
+     * @param isAbsolute true if the specified position is absolute (from the top left of the page)
      */
     public PositionRepository(int top, int left, boolean isAbsolute) {
         this.top = top;
@@ -31,10 +31,10 @@ public class PositionRepository extends DimensionRepository {
     }
 
     /**
-     * Конструктор для задания относительной позиции
-     * @param container элемент страницы, относительно которого высчитывается позиция
-     * @param top позиция от верхней линии страницы
-     * @param left позиция от левой линии страницы
+     * Constructor for setting relative position
+     * @param container page element relative to which the position is calculated
+     * @param top position from the top of the page
+     * @param left position from left page line
      */
     public PositionRepository(final PositionRepository container, final int top, final int left) {
         this.top = container == null ? top : top - container.top;

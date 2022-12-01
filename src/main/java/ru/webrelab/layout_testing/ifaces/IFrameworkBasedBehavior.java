@@ -21,9 +21,9 @@ public interface IFrameworkBasedBehavior {
     }
 
     /**
-     * Метод требуется для получения размера веб-элемента
-     * @param webElement веб-элемент
-     * @return объект SizeRepository с текущими размерами элемента
+     * The method is required to get the size of the web element
+     * @param webElement web element
+     * @return a SizeRepository object with the element's current dimensions
      */
     @SuppressWarnings("unchecked")
     default SizeRepository getSize(Object webElement) {

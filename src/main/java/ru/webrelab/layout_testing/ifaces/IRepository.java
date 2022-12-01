@@ -8,48 +8,44 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Интерфейс предназначен для реализации классов хранения данных верски
- * разных аспектов.
- * В большинстве случаев достаточно наследоваться от класса AttributeRepository,
- * в котором уже есть базовая реализация сравнения даных.
+ * The interface is designed to implement data storage classes for layout of various aspects.
+ * In most cases, it is enough to inherit from the AttributeRepository class, which already
+ * has a basic implementation of data comparison.
  */
 public interface IRepository {
 
     /**
-     * Метод должен возвращать мапу из полей класса с их значениями
-     * для возможности последующего автоматизированного сравнения
-     * значений этих полей.
-     * @return мапа из названий полей и их значений
+     * The method must return a map of the class fields with their values for the possibility of
+     * subsequent automated comparison of the values of these fields.
+     * @return map of field names and their values
      */
     Map<String, Object> getFieldMap();
 
     /**
-     * Метод должен выполнять сравнение данных в двух объектах - текущем и переданным
-     * в качестве параметра. Результат проверки - список из выявленных расхождений.
-     * @param expected объект с ожидаемыми данными. Текущий объект должен хранить актуальные
-     *                 данные, полученные с экрана.
-     * @return список из выявленных расхождений в данных. Может быть пустым.
+     * The method must perform a comparison of data in two objects - the current one and the one passed
+     * as a parameter. The result of the check is a list of identified discrepancies.
+     * @param expected an object with the expected data. The current object must store the actual data received from the screen.
+     * @return a list of identified discrepancies in the data. May be empty.
      */
     List<DifferentElements> compareWith(IRepository expected);
 
     /**
-     * Метод предоставляет возможность проверить полезность найденного на экране элемента
-     * Например если с экрана получен элемент текстовый элемент с пустым текстов то полезность
-     * его нулевая
-     * @return false если элемент не пригоден для тестирования
+     * The method provides an opportunity to check the usefulness of the element found on the screen.
+     * For example, if a text element with empty texts is received from the screen, then its usefulness is zero
+     * @return false if the element is not testable
      */
     boolean check();
 
     /**
-     * Метод предоставляет возможность рассчитать позицию элемента
-     * @param container позиция контейнера относительно которой рассчитывается позиция элемента
-     * @return объект PositionRepository с координатами элемента
+     * The method provides the ability to calculate the position of the element
+     * @param container the position of the container relative to which the position of the element is calculated
+     * @return PositionRepository object with element coordinates
      */
     PositionRepository getPosition(PositionRepository container, Object webElement);
 
     /**
-     * Метод предоставляет возможность рассчитать размеры элемента
-     * @return объект SizeRepository с размером элемента
+     * The method provides the ability to calculate the size of the element
+     * @return a SizeRepository object with the size of the element
      */
     SizeRepository getSize(Object webElement);
     String getTransform(Object webElement);
