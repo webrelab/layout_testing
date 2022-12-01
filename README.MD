@@ -1,40 +1,71 @@
-### Подключаемый модуль для тестирования верстки экранов веб приложений.
+### Plug-in for testing the layout of web application screens
 
-#### Настройка конфигурации
-Создать класс, имплементирующий IMethodsInjection и реализовать в нём все необходимые методы.
+This component allows you to detect changes in the visual display of the page based on a comparison of the current state
+with the reference one.
 
-В класс LayoutConfiguration установить объект класса имплементирующего IMethodsInjection и по необходимости переопределить стандартные значения.
+This component does not use screenshots. The work is based on the calculation of the values of the attributes of styles,
+sizes and arrangement of elements.
 
-Задать используемый на проекте фреймворк (сейчас поддерживается два варианта: Selenium WebDriver и Microsoft Playwright):
+The component automatically finds all visually significant elements of the screen in the specified area and performs all
+necessary measurements.
+
+Testing can be done in one of the aspects or in all at once: design (border, border-radius, background, box-shadow),
+typography (font, size, color, text-decoration, content, etc), images, SVG, pseudo-elements. You can add your own
+aspects of testing.
+
+You can test the entire screen or fragments. Testing outside the viewport is allowed.
+
+Comparison with testing by screenshots.
+
+| Attributes                                                                                                          | Screenshots                                                                                                                                                                                                                 |
+|---------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Whole page testing                                                                                                  | Testing in the viewport                                                                                                                                                                                                     |
+| Testing on one or more aspects                                                                                      | Aspects cannot be distinguished from the screenshot                                                                                                                                                                         |
+| Any elements can be excluded from testing                                                                           | You can't make exceptions in a screenshot                                                                                                                                                                                   |
+| You can replace volatile data with asterisks                                                                        | It's not possible in the screenshot                                                                                                                                                                                         |
+| You can include several elements located in different parts of the screen in one test at once                       | Separate elements are tested in several steps                                                                                                                                                                               |
+| Allows you to ignore small deviations in the position and size of elements, while revealing any other discrepancies | Allows you to set the percentage of mismatched pixels, but it can include both acceptable deviations in position or size, as well as obvious errors such as missing rounding of corners or changing the color of the stroke |
+| The speed of work directly depends on the number of elements included in the test                                   | High operating speed                                                                                                                                                                                                        |
+| With a large number of elements of the same type, it can compare poorly and produce multiple discrepancies          | Does not depend on the number of elements                                                                                                                                                                                   |
+
+#### Configuration
+
+Create a class that implements IMethodsInjection and implement all the necessary methods in it.
+
+In the LayoutConfiguration class, set the object of the class implementing IMethodsInjection and, if necessary, override default values.
+
+Set the framework used on the project (two options are currently supported: Selenium WebDriver and Microsoft playwright):
+
 ```
-LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new SeleniumFrameworkBehavior()); // для Selenium
-LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new PlaywrightFrameworkBehavior()); // для Playwright
-```
-#### Подготовка к запуску теста и запуск
-Перед запуском теста верстки необходимо установить один из стандартных размеров экрана. Можно использовать
-размеры из enum ScreenSize, либо определить свой класс и передать его в LayoutConfiguration
-
-```
-ScreenSizeUtils.setWindowSize(ScreenSize.DESKTOP); // для Selenium
-page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight()); // для Playwright
+LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new SeleniumFrameworkBehavior()); // for Selenium
+LayoutConfiguration.INSTANCE.setFrameworkBasedBehavior(new PlaywrightFrameworkBehavior()); // for Playwright
 ```
 
-Далее нужно подготовить список конфигураций для выполнения теста верстки и запустить тест
+#### Preparing to run the test and run
+
+Before starting the layout test, you must set one of the standard screen sizes. Can be used sizes from enum ScreenSize, or define your own class and pass it to LayoutConfiguration
 
 ```
-// получаем элемент, внутри которого нужно выполнить тест верстки
+ScreenSizeUtils.setWindowSize(ScreenSize.DESKTOP); // for Selenium
+page.setViewportSize(ScreenSize.FULL_HD.getWidth(), ScreenSize.FULL_HD.getHeight()); // for Playwright
+```
+
+Next, you need to prepare a list of configurations for performing the layout test and run the test
+
+```
+// get the element inside which you want to perform the layout test
 WebElement container = driver.findElement(By.xpath("//div[@id = 'container']"));
 WebElement element1 = container.findElement(By.xpath("//div[contains(@class, 'element1')]"));
 WebElement element2 = container.findElement(By.xpath("//div[contains(@class, 'element2')]"));
 WebElement element3 = container.findElement(By.xpath("//div[contains(@class, 'element3')]"));
 
-// добавляем один или более элементов для тестирования
+// add one or more items to test
 final List<RawDataSet> dataSetList = new ArrayList<>();
 dataSetList.add(new RawDataSet("element 1", element1, "TEXT, DECOR"))
            .add(new RawDataSet("element 2", element2, "IMAGE"))
            .add(new RawDataSet("element 3", element3, "ALL"));
 
-// создаём экземпляр экзекутера
+// create an executor instance
 final Executor executorDesktop = new Executor(
                 dataSetList,
                 "scenario_name",
@@ -43,56 +74,61 @@ final Executor executorDesktop = new Executor(
                 container
         );
 
-// выполняем тест
+// run a test
 executorDesktop.execute();
 ```
-При первом запуске будет создан JSON файл со снапшотом полученных со страницы приложения данными.\
-Файл будет записан в src/test/resources/data/layouts/CHROME/DESKTOP/path/to/file/scenario_name.json\
-в соответствии с данными из примера выше.\
-При повторном запуске будет выполнено сравнение данных полученных с экрана с теми, что были ранее записаны в json файл.
+
+At the first launch, a JSON file will be created with a snapshot of the data received from the application page.\
+The file will be written to src/test/resources/data/layouts/CHROME/DESKTOP/path/to/file/scenario_name.json\
+according to the data from the example above.\
+When restarted, the data received from the screen will be compared with those that were previously written to the json file.
 
 #### Доступные варианты проверок
 
-| Тип проверки  | Описание                                                                                                                                                      |
-|---------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| POSITION      | Проверка позиции и размера единственного элемента                                                                                                             |
-| ALL           | Влючает проверку сразу всех аспектов, перечисленных ниже                                                                                                      |
-| TEXT          | Проверка элементов содержащих текст. В снапшот записываются данные о шрифте, оформлении текста и контент                                                      |
-| IMAGE         | Проверка элементов <img>. В снапшот записывается относительный путь до изображения либо base64 код                                                            |
-| SVG           | Проверка элементов SVG. В снапшот записываются векторные данные со стилями оформления. Если элемент спрятан в shadow dom - будет попытка его вытащить по id   |
-| DECOR         | Проверка видимого оформления элементов. Будут найдены все элементы экрана, имеющие видимые стили оформления, такие как border, background, box-shadow, radius |
-| PSEUDO_BEFORE | Проверка псевдоэлементов ':before' и ':after'. В снашот записывается контент, цвет шрифта и background стили                                                  |
-| PSEUDO_AFTER  |                                                                                                                                                               |
+| Check Type    | Description                                                                                                                                                                  |
+|---------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| POSITION      | Checking the position and size of a single element                                                                                                                           |
+| ALL           | Includes verification of all aspects listed below at once                                                                                                                    |
+| TEXT          | Checking elements containing text. The snapshot contains data about the font, text design and content                                                                        |
+| IMAGE         | Checking <img> elements. The snapshot contains a relative path to the image or a base64 code                                                                                 |
+| SVG           | Validation of SVG elements. The snapshot contains vector data with visual styles. If the element is hidden in the shadow dom - there will be an attempt to pull it out by id |
+| DECOR         | Checking the visible appearance of elements. All screen elements that have visible styles such as border, background, box-shadow, radius will be found                       |
+| PSEUDO_BEFORE | Checking for ':before' and ':after' pseudo-elements. Content, font color and background styles are written to the snapshot                                                   |
+| PSEUDO_AFTER  |                                                                                                                                                                              |
 
-При выполнении любых проверок кроме POSITION, будет выполнен автоматический поиск всех подходящих элементов внутри переданного для проверки элемента.
-Данные о всех элементах переданных в один экзекутер будут записаны в единый json файл.
-При поиске элементов так же выполняется определение отношения между элементами по типу родитель-потомок.
-В последующем это используется для ограничения круга сопоставления элементов при сверке верстки. Сначала сверяются все элементы с самого верхнего уровня (корневые, родительские).
-Далее, для сопоставленных элементов выполняется проверка потомков, потом проверка их потомков.
+Any check other than POSITION will automatically search for all matching elements within the element passed to check.
+Data about all elements passed to one executor will be written to a single json file.
+When searching for elements, the relationship between elements is also determined by the parent-child type.
+Subsequently, this is used to limit the circle of matching elements when checking the layout. First, all elements from the highest level (root, parent) are checked.
+Next, for the matched elements, the descendants are checked, then their descendants are checked.
 
-#### Механизм сопоставления элементов
-После первого запуска теста выполняются все замеры и полученные данные записываются в json файл.
-С каждым последующим запуском будут выполнены все замеры и сравнение данных с записанным ранее json.
-В виду того, что единовременно могут проверяться десятки и сотни элементов на одном экране, при этом часть элементов может не на 100% соответствовать размерам и расположению из-за разницы в рендеринге на разных ОС а так же содержать действительные расхождения как по расположению и размерам, так и по специфичным параметрам, тут используется механизм просеивания всех возможных комбинаций элементов.
+#### Element Matching Mechanism
 
-Сначала из двух набором элементов (актуальные, полученные с экрана сейчас и ожидаемые, полученные из файла json) генерируются все возможные пары элементов.
+After the first run of the test, all measurements are taken and the data obtained is written to the json file.
+With each subsequent launch, all measurements and comparison of data with the previously recorded json will be performed.
+In view of the fact that tens and hundreds of elements can be checked at the same time on one screen, while some of the elements may not be 100% consistent with the size and location due to the difference in rendering on different operating systems, and also contain actual discrepancies both in location and size, and by specific parameters, here the mechanism of sifting all possible combinations of elements is used.
 
-Далее начинается просеивание:
- - Сначала отсеиваются все пары, содержащие 100% совпадение по всем параметрам. Из общей кучи убираются элементы, которые так же в себе содержат идентифицированные элементы.
- - Далее отсеиваются пары, содержащие идентичные данные и допустимое отклонение в позиции / размере (допустимая волотильность элементов). Так же из общей кучи убираются неактуальные элементы.
- - Далее отсеиваются пары, которые имеют расхождения в данных (оформление, контент), но находятся в одной позиции и имеют аналогичный размер (с учётом допустимой волотильности). Эти элементы записываются в репорт об ошибках. Общая куча очищается от неактульных элементов.
- - Далее отсеиваются пары, имеющие идентичные данные, но различающиеся по позиции / размеру. Эти пары записываются в репорт об ошибках. Куча очищается от неактуальных элементов.
- - Если после просеивания остаются несопоставленные элементы - все они записываются в ошибки по принципу "Элементу на экране не найдено сопоставление из файла" и "Элемент из файла не найден на экране"
+First, from two sets of elements (actual, received from the screen now and expected, received from the json file), all possible pairs of elements are generated.
 
-Если при просеивании были обнаружены ошибки - на странице браузера будет нарисованы цветные сеточки над элементами в которых найдены ошибки. По этой информации (плюс отчёт об ошибках) можно быстро идентифицировать проблемы с версткой.
+Next comes the sifting:
 
-#### Ограничения
-Из-за сложности идентификации большого количества элементов наложенных друг на друга, на насыщенных интерфейсах рекомендуется делать атомарные проверки (в один тест добавлять один элемент или блок с небольшим количеством элементов) для лучшей стабильности прохождения тестов.
-В разных браузерах (Chrome, Firefox, Safari) могут быть значительные расхождения в верстке, поэтому данные о верстках записываются раздельно для разных браузеров.
+- First, all pairs containing 100% match in all parameters are eliminated. Elements that also contain identified elements are removed from the common heap.
+- Next, pairs containing identical data and an allowable deviation in position / size (admissible volatility of elements) are eliminated. Irrelevant elements are also removed from the general heap.
+- Next, pairs are eliminated that have discrepancies in data (design, content), but are in the same position and have a similar size (taking into account the allowable volatility). These items are written to the bug report. The shared heap is cleared of irrelevant elements.
+- Next, pairs are eliminated that have identical data, but differ in position / size. These pairs are written to the bug report. The heap is cleared of irrelevant elements.
+- If unmatched elements remain after sifting, all of them are recorded in errors according to the principle "The element on the screen was not found to match from the file" and "The element from the file was not found on the screen"
 
-#### Расширение функциональности
-Вы можете использовать свои наборы разрешений, добавлять поддержку других фреймворков, добавлять свои аспекты тестирования.\
-Для этого достаточно добавить классы реализации этой функциональности и инжектить их в LayoutConfiguration.\
-Интерфейс IScreenSize отвечает за набор размеров экранов. Для примера можно посмотреть реализацию в enum ScreenSize.\
-Интерфейс IMeasuringType отвечает за набор способов тестирования верстки. Для примера можно посмотреть реализацию в enum MeasuringType. Важное замечание - типы POSITION и ALL нужно скопировать в своей enum для обеспечения совместимости.\
-Интерфейс IRepository отвечает за реализацию тестирования аспекта верстки. Для примера можно посмотреть любые классы, которые наследуют AttributeRepository.
+If errors were found during sifting, colored grids will be drawn on the browser page over the elements in which errors were found. Based on this information (plus error reporting), layout problems can be quickly identified.
+
+#### Restrictions
+
+Due to the difficulty of identifying a large number of elements superimposed on each other, it is recommended to do atomic checks on rich interfaces (add one element or a block with a small number of elements to one test) for better test passing stability.
+In different browsers (Chrome, Firefox, Safari) there may be significant differences in layout, so layout data is recorded separately for different browsers.
+
+#### Functionality extension
+
+You can use your permission sets, add support for other frameworks, add your own testing aspects.\
+To do this, just add classes that implement this functionality and inject them into LayoutConfiguration.\
+The IScreenSize interface is responsible for the set of screen sizes. For an example, you can see the implementation in enum ScreenSize.\
+The IMeasuringType interface is responsible for a set of layout testing methods. For an example, you can see the implementation in enum MeasuringType. Important note - POSITION and ALL types need to be copied in your enum for compatibility.\
+The IRepository interface is responsible for implementing the testing aspect of layout. For an example, you can look at any classes that inherit AttributeRepository.
