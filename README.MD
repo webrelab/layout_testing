@@ -15,6 +15,14 @@ aspects of testing.
 
 You can test the entire screen or fragments. Testing outside the viewport is allowed.
 
+Component mark all found elements
+
+![snapshot](https://user-images.githubusercontent.com/9144386/205214281-d16f8945-6cc2-45c2-a447-c3bd21f9580d.png)
+
+Component mark all wrong elements
+
+![defect_found](https://user-images.githubusercontent.com/9144386/205214367-c590152e-6b81-4d57-b3c4-89f8f18d2290.png)
+
 Comparison with testing by screenshots.
 
 | Attributes                                                                                                          | Screenshots                                                                                                                                                                                                                 |
