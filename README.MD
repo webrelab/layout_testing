@@ -91,6 +91,15 @@ The file will be written to src/test/resources/data/layouts/CHROME/DESKTOP/path/
 according to the data from the example above.\
 When restarted, the data received from the screen will be compared with those that were previously written to the json file.
 
+#### Exceptions
+
+In some cases, out of the total mass of elements, it is necessary to exclude some from the comparison. In this case, you can find this element in the JSON file and set the ignore parameter to true.
+
+You can fine-tune the exclusions. This method is available for all text data (be it element content or inline attributes). After receiving JSON, you can find the desired element in it and replace the value fragments with an asterisk. In this case, the component will only check for occurrences of fragments according to the resulting mask.
+
+For example, the expected background value is: "rgba(231, 235, 246, 0.3) none repeat scroll 0% 0% / auto padding-box border-box"\
+If at the same time the element on the screen can dynamically change transparency and we do not need to take this into account, then we replace the transparency with an asterisk: "rgba(231, 235, 246*) none repeat scroll 0% 0% / auto padding-box border-box"
+
 #### Available test options
 
 | Check Type    | Description                                                                                                                                                                  |
